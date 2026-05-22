@@ -1,0 +1,19 @@
+{
+  "name": "SWE-bench family and SWE-ContextBench",
+  "category": "Coding benchmarks",
+  "official_url": "https://swebench.com/original.html",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "SWE-bench: resolve real GitHub issues with patch + tests. Variants (Lite, Verified, Multilingual, Pro) increase difficulty or horizon. SWE-ContextBench adds related-task pairs to measure whether agents benefit from reusing prior context (summaries vs. full trajectories vs. oracle selection).",
+  "deployment_pattern": "Run harness in Docker with repo snapshots; used by labs and vendors for Pass@1 reporting.",
+  "benchmarks_eval_alignment": "SWE-ContextBench (arXiv:2602.08316) reports that well-chosen summarized context improves accuracy and cuts tokens/time, while unfiltered context can hurt—direct evidence for curation over volume.",
+  "ecosystem_integrations": "SWE-agent, OpenHands, commercial coding agents; datasets on Hugging Face.",
+  "differentiators": "SWE-ContextBench explicitly tests cross-issue learning; original SWE-bench treats instances more independently.",
+  "significance_for_builders": "Invest in selective memory: store decision records and minimal code pointers, not entire prior tool transcripts, when chaining related fixes.",
+  "key_timeline_or_milestones": "SWE-bench widely cited from 2024; SWE-ContextBench v2 on arXiv 2602.08316 in 2026.",
+  "primary_sources": [
+    {"title": "SWE-bench official site", "url": "https://www.swebench.com/SWE-bench/"},
+    {"title": "SWE-ContextBench paper (HTML)", "url": "https://arxiv.org/html/2602.08316v2"},
+    {"title": "SWE-ContextBench abs", "url": "https://arxiv.org/abs/2602.08316"}
+  ],
+  "uncertain": []
+}

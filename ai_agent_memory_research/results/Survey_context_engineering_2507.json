@@ -1,0 +1,18 @@
+{
+  "name": "Survey — Context Engineering for LLMs (arXiv 2507.13334)",
+  "category": "Academic survey",
+  "official_url": "https://arxiv.org/abs/2507.13334",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "July 2025 survey (Mei et al.) analyzing 1400+ papers; formalizes **Context Engineering** beyond prompts into: (1) retrieval/generation, (2) processing (long sequence, refinement, structure), (3) **management** (memory hierarchies, compression, optimization). Systems layer covers RAG variants, **memory systems**, tool-integrated reasoning, multi-agent orchestration. Flags **comprehension–generation gap**: models ingest long context better than they produce equally long coherent output.",
+  "deployment_pattern": "Use taxonomy to classify your stack: Alex = management (compression) + multi-agent + tool reasoning on observability data.",
+  "benchmarks_eval_alignment": "Survey synthesizes benchmark families (long-context, RAG, agent); does not replace product-specific long-session evals.",
+  "ecosystem_integrations": "Awesome-Context-Engineering GitHub companion repo cited by authors.",
+  "differentiators": "Academic **map** vs. Alex **point solution**: survey validates that **memory hierarchies and compression** are mainstream research themes—Alex's head/tail+store is one instance of management; Mem0/Zep are memory-system implementations.",
+  "significance_for_builders": "When pitching architecture, place Alex tactics under **Context Management** and **Multi-Agent Systems** chapters of this survey—not as ad hoc hacks.",
+  "key_timeline_or_milestones": "arXiv:2507.13334 posted July 21, 2025.",
+  "primary_sources": [
+    {"title": "A Survey of Context Engineering for Large Language Models", "url": "https://arxiv.org/abs/2507.13334"},
+    {"title": "arXiv HTML", "url": "https://arxiv.org/html/2507.13334v1"}
+  ],
+  "uncertain": []
+}

@@ -1,0 +1,28 @@
+{
+  "name": "openai_support_last_n",
+  "description": "OpenAI-style trimming: support chat with last_n policy instead of head_tail",
+  "config": {
+    "trim_mode": "last_n",
+    "keep_last_n": 10,
+    "tool_policy_enabled": false
+  },
+  "turns": [
+    [{"role": "system", "content": "Support agent for Acme SaaS."}],
+    [{"role": "user", "content": "Account email: user@acme.com — billing issue."}],
+    [{"role": "assistant", "content": "I see account A-9912."}],
+    [{"role": "user", "content": "Invoice #4401 was double charged."}],
+    [{"role": "assistant", "content": "Checking Stripe."}],
+    [{"role": "user", "content": "Need refund by Friday."}],
+    [{"role": "assistant", "content": "Escalated."}],
+    [{"role": "user", "content": "Status update?"}],
+    [{"role": "assistant", "content": "Refund approved R-7781."}],
+    [{"role": "user", "content": "What was the invoice number again?"}],
+    [{"role": "assistant", "content": "One moment."}],
+    [{"role": "user", "content": "And my account email?"}]
+  ],
+  "assertions": [
+    {"after_turn": 12, "kind": "content_in_hot", "value": "Invoice #4401", "description": "Recent billing detail still in last-10 window"},
+    {"after_turn": 12, "kind": "content_recallable", "value": "user@acme.com", "description": "Early turn archived but recallable with last_n"},
+    {"after_turn": 12, "kind": "hot_chars_under", "value": 3000, "description": "Support thread stays small"}
+  ]
+}

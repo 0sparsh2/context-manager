@@ -1,0 +1,18 @@
+{
+  "name": "Agent memory market landscape",
+  "category": "Market synthesis",
+  "official_url": "https://arxiv.org/html/2511.18743v1",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "The market splits into (1) **model-host session tricks**—compaction, trimming, prompt caching; (2) **platform conversation state**—OpenAI Conversations/Sessions, Anthropic compaction APIs; (3) **application memory services**—Mem0, Zep, Letta, vector DB + RAG pipelines; (4) **IDE/agent hosts**—rules files, MCP resources, subagents. Buyers mix 1+2 for convenience and add 3 when personalization or cross-session facts must survive compaction.",
+  "deployment_pattern": "Pick one primary store for durable facts (memory service or graph), one policy for transcript (summarize/trim), and tracing to verify recall quality.",
+  "benchmarks_eval_alignment": "LongMemEval and LOCOMO-style long-dialog tasks are cited by vendors to compare memory layers vs. baselines; treat vendor numbers as marketing until reproduced.",
+  "ecosystem_integrations": "MCP for attaching memory servers; LangGraph/LangChain for orchestration; observability vendors for drift and recall audits.",
+  "differentiators": "Graph/temporal memory (Zep) vs. embedding store (classic RAG) vs. agent-editable blocks (Letta) vs. lightweight fact cache (Mem0).",
+  "significance_for_builders": "Choose based on **temporal correctness** (do facts expire?), **editability** (does the agent rewrite memory?), and **latency budget** (p95 retrieval), not headline context-window size.",
+  "key_timeline_or_milestones": "2024–2026 wave of memory papers and products (Mem0 arXiv Apr 2025; Zep arXiv Jan 2025; Letta v1 blog Oct 2025).",
+  "primary_sources": [
+    {"title": "RhinoInsight — control mechanisms for deep research context", "url": "https://arxiv.org/html/2511.18743v1"},
+    {"title": "Weizhena — Deep-Research-skills (structured research workflow)", "url": "https://github.com/Weizhena/Deep-Research-skills"}
+  ],
+  "uncertain": []
+}

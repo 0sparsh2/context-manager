@@ -1,0 +1,39 @@
+# Generated following Weizhena/Deep-Research-skills workflow (Phase 1 + Step 2 supplement).
+# Repo: https://github.com/Weizhena/Deep-Research-skills
+topic: "AI agent context management — products, APIs, benchmarks, and best practices (2024–2026)"
+items:
+  - name: Anthropic Messages API (caching, compaction, context editing)
+    category: Model platform
+    description: First-party API primitives that shape how hosts manage prompt size, reuse, and lossy summarization.
+  - name: Claude Code session and compaction behavior
+    category: Agent product
+    description: Developer-facing agent that runs long sessions; industry practice around auto-compact and project files.
+  - name: Cursor IDE (rules, @ context, MCP host)
+    category: IDE host
+    description: How a coding IDE pins stable instructions and attaches tools/resources to the model.
+  - name: OpenAI Codex (AGENTS.md, skills, MCP, subagents)
+    category: Agent product
+    description: OpenAI/GitHub Codex customization layers for repository- and org-level context.
+  - name: GitHub Copilot semantic repository indexing
+    category: Platform feature
+    description: Meaning-based codebase indexing for chat and cloud agent context.
+  - name: Model Context Protocol (MCP)
+    category: Standard
+    description: Cross-vendor protocol for tools, resources, and prompts as external context.
+  - name: Long-context evaluation (NoLiMa, NeedleChain, Haystack-style)
+    category: Research benchmarks
+    description: Recent benchmarks that stress literal retrieval vs. full-context reasoning vs. agentic haystacks.
+  - name: SWE-bench family and SWE-ContextBench
+    category: Coding benchmarks
+    description: Issue-fixing benchmarks and newer work on reusing context across related coding tasks.
+  - name: Mem0 and long-term memory layers
+    category: Infrastructure
+    description: Open memory layer pattern (extract, consolidate, retrieve) complementing the context window.
+  - name: Arize / Sally-Ann DeLucia talk — production agent context
+    category: Industry perspective
+    description: Public narrative on context overload, hierarchical memory, and control mechanisms (ties to RhinoInsight theme).
+
+execution:
+  batch_size: 2
+  items_per_agent: 1
+  output_dir: "./ai_agent_context_management_research/results"

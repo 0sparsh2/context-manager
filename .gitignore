@@ -1,0 +1,19 @@
+.venv/
+.research-venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.DS_Store
+
+# Upstream reference clone (install separately)
+deep-research-skills-ref/
+
+# Secrets — never commit
+.env
+
+# Local DB from demos (optional)
+*.db
+context_manager.db

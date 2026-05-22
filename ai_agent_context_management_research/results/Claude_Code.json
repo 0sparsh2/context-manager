@@ -1,0 +1,19 @@
+{
+  "name": "Claude Code session and compaction behavior",
+  "category": "Agent product",
+  "official_url": "https://www.anthropic.com/claude-code",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Long-running terminal/IDE agent combining repository access, bash, file tools, and multi-turn history. When context pressure grows, sessions rely on compaction-style behavior (summarizing prior work) described in third-party analyses and aligned with Anthropic's API compaction feature for programmatic use.",
+  "deployment_pattern": "Local CLI or editor integration; project instructions via CLAUDE.md and committed config; users can invoke manual compaction where supported. Actual token accounting is opaque to end users beyond visible thread limits.",
+  "benchmarks_eval_alignment": "Evaluated indirectly via coding benchmarks (SWE-bench style) in industry leaderboards; no single public 'compaction quality' metric.",
+  "ecosystem_integrations": "Reads git workspaces, MCP servers, and CI logs; pairs with Anthropic API features when using cloud models.",
+  "differentiators": "Tight coupling of repo tools + conversation; productized workflow vs. rolling your own ReAct loop.",
+  "significance_for_builders": "Assume lossy long sessions: checkpoint intent in CLAUDE.md, write handoff notes at task boundaries, and avoid relying on megabytes of prior tool output after compaction.",
+  "key_timeline_or_milestones": "Anthropic API compaction beta (2026 header in docs) clarifies server-side pattern many agent products mirror.",
+  "primary_sources": [
+    {"title": "Compaction — Claude API (reference for compaction model)", "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"},
+    {"title": "Claude Code Auto-Compact (third-party guide)", "url": "https://www.morphllm.com/claude-code-auto-compact"},
+    {"title": "Anthropic Claude Code", "url": "https://www.anthropic.com/claude-code"}
+  ],
+  "uncertain": []
+}

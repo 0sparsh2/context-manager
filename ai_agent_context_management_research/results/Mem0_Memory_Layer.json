@@ -1,0 +1,18 @@
+{
+  "name": "Mem0 and long-term memory layers",
+  "category": "Infrastructure",
+  "official_url": "https://github.com/mem0ai/mem0",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Memory layer that extracts salient facts/preferences from conversations, consolidates, and retrieves relevant snippets for later turns—reducing need to keep full history in the model window.",
+  "deployment_pattern": "pip install mem0ai / npm mem0ai; hosted Mem0 platform or self-hosted OSS; integrate as retrieval step before each LLM call.",
+  "benchmarks_eval_alignment": "Preprint arXiv:2504.19413 and project README claim strong gains vs. full-context baselines and vs. OpenAI Memory on LOCOMO-style long-dialog tasks; treat headline percentages as [uncertain] until reproduced on your workload.",
+  "ecosystem_integrations": "Framework-agnostic; pairs with any chat/agent stack; graph memory options in product messaging.",
+  "differentiators": "Open-source Apache-2.0 path plus managed cloud; positions as dedicated memory service rather than IDE feature.",
+  "significance_for_builders": "If transcripts exceed a few thousand tokens regularly, externalize durable state (structured memory + docs) instead of hoping the model re-reads entire logs.",
+  "key_timeline_or_milestones": "Active development 2024–2026; paper Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory (arXiv:2504.19413).",
+  "primary_sources": [
+    {"title": "mem0ai/mem0 on GitHub", "url": "https://github.com/mem0ai/mem0"},
+    {"title": "Mem0 paper (arXiv abstract)", "url": "https://arxiv.org/abs/2504.19413"}
+  ],
+  "uncertain": []
+}

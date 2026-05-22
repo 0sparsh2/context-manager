@@ -1,0 +1,19 @@
+{
+  "name": "OpenAI Agents SDK — sessions, trimming, and memory notes",
+  "category": "Industry leader (model platform)",
+  "official_url": "https://developers.openai.com/cookbook/examples/agents_sdk/session_memory",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "OpenAI documents **context engineering** explicitly: **Session** objects auto-persist history; cookbook recommends **trimming** (keep last N turns—deterministic, no summarizer variance) vs **compression** (summarize older turns). Separate cookbook on **long-term memory notes** for personalization. Responses/Conversations APIs for server-persisted threads. Philosophy: **curate** history before stuffing GPT-5-class windows (272k input cited in cookbook).",
+  "deployment_pattern": "Agents SDK Session + RunConfig; apply trimming policies for tool-heavy loops; use Conversations API for cross-device continuity; optional memory notes layer for prefs.",
+  "benchmarks_eval_alignment": "Cookbook emphasizes coherence and cost, not LOCOMO scores; aligns with production eval mindset in DeLucia talk.",
+  "ecosystem_integrations": "Codex, ChatGPT agents, third-party hosts on OpenAI API.",
+  "differentiators": "vs. **Alex**: OpenAI **endorses trimming as first-class** (similar spirit to head/tail keeping recent verbatim) and treats **summarization/compression as optional**—matches DeLucia's **distrust of uncontrolled summarization** but OpenAI still documents compression as a technique. Alex adds **explicit external store + tool recall by ID** rather than only dropping old turns.",
+  "significance_for_builders": "Official guidance supports **deterministic context policies + evals** over hope-and-pray full context; combine SDK trimming with **external memory** (Mem0/DB) for cross-session facts Alex still lacks.",
+  "key_timeline_or_milestones": "2025 OpenAI cookbook 'Context Engineering - Short-Term Memory Management with Sessions'; Agents SDK session docs.",
+  "primary_sources": [
+    {"title": "OpenAI Cookbook — session memory / context engineering", "url": "https://developers.openai.com/cookbook/examples/agents_sdk/session_memory"},
+    {"title": "OpenAI Cookbook — personalization / memory notes", "url": "https://developers.openai.com/cookbook/examples/agents_sdk/context_personalization"},
+    {"title": "OpenAI — Conversation state", "url": "https://developers.openai.com/api/docs/guides/conversation-state"}
+  ],
+  "uncertain": []
+}

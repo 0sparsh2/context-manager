@@ -1,0 +1,22 @@
+{
+  "name": "Comparison synthesis — Arize Alex vs research and industry (2024–2026)",
+  "category": "Synthesis",
+  "official_url": "https://youtu.be/esY99nYXxR4",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "**Did we compare to current research and big industry leaders? Yes** (this artifact). **Arize Alex (DeLucia):** rejected naive head-only truncation and **uncontrolled LLM summarization**; production = **~100 char head + ~100 char tail**, middle to **DB with ID-based tool recall**, dedupe, latest tool output, stable system prompt; **sub-agents** for heavy span search; **long-session evals** (e.g. 10 turns → test 11); **long-term cross-chat memory still TODO**. **Industry convergence:** Anthropic **compaction** (server summarization) + **tool-result clearing**; Claude Code **similar** truncation story per speaker; OpenAI cookbook **trimming first**, compression optional; Google **caching/compression** on huge windows; Cursor **rules+MCP** for static/dynamic split; GitHub **cited memories** ahead on cross-session facts. **Research alignment:** Survey 2507.13334 places Alex under **context management + multi-agent**; RhinoInsight adds **checklist/evidence audit** Alex does not emphasize; Mem0/Zep papers push **external memory layers** Alex partially implements via store but not full semantic long-term memory; SWE-ContextBench shows **bad context hurts** coding agents—supports Alex's curation thesis. **Gaps vs. leaders:** Alex lacks Copilot-style **verified long-term memory**; lacks Anthropic **prompt-cache** focus (speaker deferred); more heuristic than OpenAI **trim-last-N** simplicity. **Where Alex is ahead in narrative:** observability-native **vicious-loop** diagnosis, **eval-at-turn-11**, explicit **context vs memory** split, **sub-agent** pattern for trace search at scale.",
+  "deployment_pattern": "Hybrid stack recommendation: (1) stable rules/system prompt, (2) deterministic trim or head/tail + external store, (3) tool-result clearing or latest-only policy, (4) sub-agents for heavy retrieval, (5) long-horizon eval suite, (6) add Mem0/Zep or Copilot-style cited memory for cross-session, (7) optional API compaction if on Claude and summarization quality is acceptable.",
+  "benchmarks_eval_alignment": "Use **long-session evals** (Alex) + **LongMemEval/LOCOMO** (vendors) + **SWE-ContextBench** (code) + RhinoInsight tasks (research agents)—no single benchmark covers observability trace agents.",
+  "ecosystem_integrations": "Maps across Anthropic, OpenAI, Google, Microsoft/GitHub, Cursor, Mem0, Zep, Letta, LangGraph—see sibling JSON files in this research folder.",
+  "differentiators": "This synthesis is the explicit cross-walk the user asked for; prior passes covered pieces but this item states comparative conclusions in one place.",
+  "significance_for_builders": "You are not choosing Alex OR industry—you are choosing **layers**: curation policy (Alex/OpenAI), platform compaction (Anthropic), economic caching (Google), durable facts (GitHub/Mem0/Zep), process control (RhinoInsight). DeLucia's surprise that summarization failed is **partially contradicted** by Anthropic shipping summarization-as-compaction—suggests **controlled/server-managed** summarization may work where ad hoc app summarization did not.",
+  "key_timeline_or_milestones": "Comparison assembled 2026-05-14 using transcript-backed DeLucia JSON + 2025–2026 docs/papers cited in sibling results.",
+  "primary_sources": [
+    {"title": "DeLucia talk + transcript", "url": "https://youtu.be/esY99nYXxR4"},
+    {"title": "Context Engineering survey 2507.13334", "url": "https://arxiv.org/abs/2507.13334"},
+    {"title": "RhinoInsight 2511.18743", "url": "https://arxiv.org/html/2511.18743v1"},
+    {"title": "Anthropic compaction", "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"},
+    {"title": "OpenAI session memory cookbook", "url": "https://developers.openai.com/cookbook/examples/agents_sdk/session_memory"},
+    {"title": "GitHub Copilot Memory", "url": "https://docs.github.com/en/copilot/concepts/agents/copilot-memory"}
+  ],
+  "uncertain": []
+}

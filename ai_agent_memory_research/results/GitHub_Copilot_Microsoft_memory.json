@@ -1,0 +1,19 @@
+{
+  "name": "GitHub Copilot / Microsoft — agent memory system",
+  "category": "Industry leader (platform)",
+  "official_url": "https://docs.github.com/en/copilot/concepts/agents/copilot-memory",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "**Copilot Memory** (preview): repository- and user-scoped **facts** with **citations to code locations**, re-verified on use so stale memories are dropped as code changes—explicitly **long-term memory across chats** (what Alex is still building). **VS Code agent memory** scopes: user (/memories/), repo (/memories/repo/), session (/memories/session/) with auto-load of first 200 lines of user memory. **Semantic repo indexing** for chat/cloud agent. Cross-feature memory (review → cloud agent).",
+  "deployment_pattern": "Enable memory preview flags; curate repo memories for conventions; rely on citation refresh for accuracy; combine with semantic index for code Q&A.",
+  "benchmarks_eval_alignment": "GitHub blog describes agentic memory design goals; no public LongMemEval leaderboard from Microsoft in docs.",
+  "ecosystem_integrations": "GitHub.com, VS Code, Copilot CLI, OpenAI Codex agent on GitHub.",
+  "differentiators": "vs. **Alex**: Microsoft ships **durable, scoped, cited memories** and **JIT verification**—ahead of Alex's admitted gap on **new-chat long-term memory**. Alex is stronger on **in-session** middle truncation for **massive trace blobs**; Copilot Memory targets **facts about code and prefs**, not multi-MB span dumps.",
+  "significance_for_builders": "For **cross-session user/repo knowledge**, study Copilot Memory's citation model; for **single-session trace storms**, study Alex sub-agents + head/tail store.",
+  "key_timeline_or_milestones": "2025 GitHub blog 'Building an agentic memory system for GitHub Copilot'; VS Code memory tool preview.",
+  "primary_sources": [
+    {"title": "GitHub Docs — About Copilot Memory", "url": "https://docs.github.com/en/copilot/concepts/agents/copilot-memory"},
+    {"title": "GitHub Blog — agentic memory for Copilot", "url": "https://github.blog/ai-and-ml/github-copilot/building-an-agentic-memory-system-for-github-copilot/"},
+    {"title": "VS Code — Memory in agents", "url": "https://code.visualstudio.com/docs/copilot/agents/memory"}
+  ],
+  "uncertain": []
+}

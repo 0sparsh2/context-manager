@@ -1,0 +1,19 @@
+{
+  "name": "Claude Code — product context and compaction",
+  "category": "Industry leader (agent product)",
+  "official_url": "https://code.claude.com/docs",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Terminal/IDE coding agent with repo tools, CLAUDE.md project instructions, MCP, and **auto-compaction** near context pressure (widely documented in community analyses aligned with Anthropic API compaction). DeLucia stated publicly that **Claude Code** discussions describe a **similar head/tail truncation + compression** pattern to Alex—convergent industry practice without identical implementation details in her talk.",
+  "deployment_pattern": "CLAUDE.md for stable rules; MCP for external data; rely on auto-compact or manual /compact at task boundaries; subagent patterns in newer SDK docs.",
+  "benchmarks_eval_alignment": "No public Alex-style long-session eval spec; SWE-bench style coding leaderboards measure end tasks not context policy.",
+  "ecosystem_integrations": "Anthropic models, MCP, git workspaces, CI.",
+  "differentiators": "vs. **Alex**: Claude Code optimizes **general coding**; Alex optimizes **observability trace analysis** where context is **telemetry-heavy** and failures feed back into spans. Both converge on **truncate/compress + don't reset system prompt + delegate heavy work**.",
+  "significance_for_builders": "Validates that **custom Alex-style heuristics** are not exotic—major coding agents ship comparable context survival tactics; your differentiator is **domain-specific evals** (10-turn → 11th-turn) and **retrieval IDs** for dropped middle.",
+  "key_timeline_or_milestones": "Claude Code GA evolution 2025–2026; compaction API alignment per Anthropic docs.",
+  "primary_sources": [
+    {"title": "Claude Code docs", "url": "https://code.claude.com/docs"},
+    {"title": "Anthropic — Compaction (API basis)", "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"},
+    {"title": "DeLucia talk — Claude Code similarity (user transcript)", "url": "https://youtu.be/esY99nYXxR4"}
+  ],
+  "uncertain": ["context_primitives"]
+}

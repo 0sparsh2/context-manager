@@ -1,0 +1,19 @@
+{
+  "name": "Zep (Graphiti temporal knowledge graph memory)",
+  "category": "Product / research",
+  "official_url": "https://docs.getzep.com/",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Zep advertises a temporal knowledge graph ('Graphiti') that ingests conversational and structured business data, tracks validity intervals for facts/edges, and retrieves subgraph context for agents. Emphasis on **time-aware** correctness (what was true when) vs. flat chunk retrieval.",
+  "deployment_pattern": "Managed Zep service or self-hosted components per docs; define ontology/domain schema for graph extraction quality.",
+  "benchmarks_eval_alignment": "Company materials and arXiv:2501.13956 discuss benchmarks including LongMemEval and Deep Memory Retrieval comparisons; numeric superiority claims should be validated independently [uncertain].",
+  "ecosystem_integrations": "Enterprise data connectors; latency targets marketed sub-200ms P95 for retrieval [uncertain].",
+  "differentiators": "Temporal graph memory vs. pure vector RAG; targets enterprise facts that evolve (policies, org charts, deals).",
+  "significance_for_builders": "If your domain has **expiring or superseded facts**, graph+temperature may beat embedding-only memory; expect heavier schema/ops burden.",
+  "key_timeline_or_milestones": "arXiv preprint Jan 2025 (2501.13956) describing temporal KG architecture for agent memory.",
+  "primary_sources": [
+    {"title": "Zep — Agent Memory product", "url": "https://www.getzep.com/product/agent-memory/"},
+    {"title": "Zep temporal KG paper (HTML)", "url": "https://arxiv.org/html/2501.13956"},
+    {"title": "Zep documentation", "url": "https://docs.getzep.com/"}
+  ],
+  "uncertain": ["benchmarks_eval_alignment", "ecosystem_integrations"]
+}

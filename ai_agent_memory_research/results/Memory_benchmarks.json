@@ -1,0 +1,18 @@
+{
+  "name": "Memory evaluation benchmarks (LOCOMO, LongMemEval, Deep Memory Retrieval)",
+  "category": "Research / eval",
+  "official_url": "https://arxiv.org/abs/2504.19413",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Long-dialog and personalization benchmarks (e.g., LOCOMO) stress recall over many sessions. LongMemEval (community benchmark name cited by Zep and others) targets enterprise-style temporal QA. Deep Memory Retrieval benchmarks compare memory architectures on needle-like fact extraction across long histories.",
+  "deployment_pattern": "Run vendor-provided harnesses or reproduce paper splits when comparing Mem0/Zep/Letta integrations; log precision/recall and latency separately.",
+  "benchmarks_eval_alignment": "Mem0 paper discusses LOCOMO-class comparisons; Zep paper/blog discusses LongMemEval and Deep Memory Retrieval—cross-check methods sections before trusting leaderboard ordering.",
+  "ecosystem_integrations": "Hugging Face datasets, academic releases, vendor marketing pages.",
+  "differentiators": "Separates **temporal** reasoning from **static** RAG; many public leaderboards still overfit to literal string overlap.",
+  "significance_for_builders": "Pick 1–2 benchmarks that mirror your product (multi-session prefs vs. enterprise policy updates vs. code repo memory) instead of generic NIAH.",
+  "key_timeline_or_milestones": "Mem0 arXiv Apr 2025; Zep arXiv Jan 2025; benchmark names reused across vendor posts—verify dataset versions [uncertain].",
+  "primary_sources": [
+    {"title": "Mem0 paper (benchmark discussion)", "url": "https://arxiv.org/abs/2504.19413"},
+    {"title": "Zep temporal memory paper", "url": "https://arxiv.org/html/2501.13956"}
+  ],
+  "uncertain": ["key_timeline_or_milestones", "benchmarks_eval_alignment"]
+}

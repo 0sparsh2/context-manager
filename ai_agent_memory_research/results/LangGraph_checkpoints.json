@@ -1,0 +1,18 @@
+{
+  "name": "LangGraph checkpointing and thread persistence",
+  "category": "Framework",
+  "official_url": "https://docs.langchain.com/oss/python/langgraph/persistence",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "LangGraph provides durable checkpoints for graph state (variables, pending tool calls, branch metadata) keyed by thread_id, separate from raw LLM context. Developers choose checkpointer backends (memory, SQLite, Postgres) to resume workflows and implement human-in-the-loop interrupts.",
+  "deployment_pattern": "Configure checkpointer in graph compile; persist thread IDs in your app DB; combine with external vector store for RAG if needed.",
+  "benchmarks_eval_alignment": "Framework capability rather than benchmark; quality depends on what you serialize into state vs. what you re-fetch.",
+  "ecosystem_integrations": "LangChain ecosystem, LangSmith tracing, common SQL/vector stores.",
+  "differentiators": "Application **control-plane** memory (orchestration state) vs. semantic user memory products—often used together.",
+  "significance_for_builders": "Use LangGraph checkpoints for **reliable multi-step execution**, not as a substitute for curated semantic memory unless you deliberately store embeddings in state.",
+  "key_timeline_or_milestones": "LangGraph persistence docs maintained alongside LangGraph 0.x/1.x releases [exact version N/A].",
+  "primary_sources": [
+    {"title": "LangGraph — Persistence (LangChain docs)", "url": "https://docs.langchain.com/oss/python/langgraph/persistence"},
+    {"title": "LangGraph checkpointer integrations", "url": "https://docs.langchain.com/oss/python/integrations/checkpointers"}
+  ],
+  "uncertain": ["key_timeline_or_milestones"]
+}

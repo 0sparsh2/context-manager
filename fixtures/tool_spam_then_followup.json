@@ -1,0 +1,84 @@
+{
+  "name": "tool_spam_then_followup",
+  "config": {
+    "trim_mode": "head_tail",
+    "head_messages": 1,
+    "tail_messages": 4,
+    "tool_policy_enabled": true
+  },
+  "turns": [
+    [
+      {"role": "system", "content": "You are Alex, an observability assistant."},
+      {"role": "user", "content": "Analyze trace T-100 for errors."}
+    ],
+    [
+      {"role": "assistant", "content": "Running span search."},
+      {"role": "tool", "name": "search_spans", "content": "SPAN_DUMP_V1: large trace blob with payment-service stack frames (older run)"},
+      {"role": "tool", "name": "search_spans", "content": "SPAN_DUMP_V2: medium trace blob (superseded)"},
+      {"role": "tool", "name": "search_spans", "content": "SPAN_DUMP_V3_LATEST: error in payment-service"}
+    ],
+    [
+      {"role": "assistant", "content": "Found payment-service error."},
+      {"role": "user", "content": "What was the latest span search result?"}
+    ],
+    [
+      {"role": "assistant", "content": "Checking context."}
+    ],
+    [
+      {"role": "user", "content": "Confirm: payment-service still the focus?"}
+    ],
+    [
+      {"role": "assistant", "content": "Yes."}
+    ],
+    [
+      {"role": "user", "content": "fill turn 7"}
+    ],
+    [
+      {"role": "assistant", "content": "ok"}
+    ],
+    [
+      {"role": "user", "content": "fill turn 8"}
+    ],
+    [
+      {"role": "assistant", "content": "ok"}
+    ],
+    [
+      {"role": "user", "content": "fill turn 9"}
+    ],
+    [
+      {"role": "assistant", "content": "ok"}
+    ],
+    [
+      {"role": "user", "content": "fill turn 10"}
+    ],
+    [
+      {"role": "assistant", "content": "ok"}
+    ]
+  ],
+  "assertions": [
+    {
+      "after_turn": 3,
+      "kind": "content_in_hot",
+      "value": "SPAN_DUMP_V3_LATEST",
+      "description": "Latest tool output stays in hot context"
+    },
+    {
+      "after_turn": 3,
+      "kind": "content_recallable",
+      "value": "SPAN_DUMP_V1",
+      "description": "Older tool dumps archived but recallable"
+    },
+    {
+      "after_turn": 14,
+      "kind": "content_in_hot",
+      "value": "Analyze trace T-100",
+      "description": "Head anchor survives long session (turn 11+)"
+    },
+    {
+      "after_turn": 14,
+      "kind": "hot_chars_under",
+      "value": 8000,
+      "description": "Hot context bounded after many turns"
+    }
+  ]
+}

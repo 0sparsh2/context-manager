@@ -1,0 +1,40 @@
+{
+  "name": "naive_truncation_fails",
+  "config": {
+    "trim_mode": "head_tail",
+    "head_messages": 1,
+    "tail_messages": 2
+  },
+  "turns": [
+    [
+      {"role": "system", "content": "Assistant."},
+      {"role": "user", "content": "Topic: input B is the billing module."}
+    ],
+    [
+      {"role": "assistant", "content": "Noted."},
+      {"role": "user", "content": "filler 2"}
+    ],
+    [
+      {"role": "assistant", "content": "ok"},
+      {"role": "user", "content": "filler 3"}
+    ],
+    [
+      {"role": "assistant", "content": "ok"},
+      {"role": "user", "content": "Tell me more about input B."}
+    ]
+  ],
+  "assertions": [
+    {
+      "after_turn": 4,
+      "kind": "content_in_hot",
+      "value": "billing module",
+      "description": "Head anchor preserved (unlike naive head-only truncation)"
+    },
+    {
+      "after_turn": 4,
+      "kind": "content_recallable",
+      "value": "filler 2",
+      "description": "Middle turn archived to store but recallable"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "OpenAI conversation state and Agents SDK sessions",
+  "category": "Model platform",
+  "official_url": "https://developers.openai.com/api/docs/guides/conversation-state",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Responses API can chain via previous_response_id; Conversations API persists a durable conversation object. Agents SDK adds session abstractions (e.g., memory sessions, SQLite-backed sessions) with documented patterns for trimming/compression so long runs stay within practical cost/accuracy.",
+  "deployment_pattern": "Use conversation IDs or SDK sessions instead of hand-rolling full transcripts; apply trimming policies for tool-heavy threads.",
+  "benchmarks_eval_alignment": "N/A as a memory benchmark; effectiveness depends on application prompts and trimming policy.",
+  "ecosystem_integrations": "OpenAI Agents SDK, hosted OpenAI infra, third-party hosts consuming the same APIs.",
+  "differentiators": "Deep integration with OpenAI model stack and billing; not a cross-model open memory graph by itself.",
+  "significance_for_builders": "Good **default short-term memory** when you stay in OpenAI; still add external KB if facts must be auditable across models or vendors.",
+  "key_timeline_or_milestones": "2025 docs for conversation state + Agents SDK session memory cookbook examples.",
+  "primary_sources": [
+    {"title": "OpenAI — Conversation state guide", "url": "https://developers.openai.com/api/docs/guides/conversation-state"},
+    {"title": "OpenAI Cookbook — session memory / agents", "url": "https://developers.openai.com/cookbook/examples/agents_sdk/session_memory"},
+    {"title": "OpenAI — Running agents guide", "url": "https://developers.openai.com/api/docs/guides/agents/running-agents"}
+  ],
+  "uncertain": []
+}

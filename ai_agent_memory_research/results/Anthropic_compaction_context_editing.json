@@ -1,0 +1,19 @@
+{
+  "name": "Anthropic API — compaction and context editing",
+  "category": "Industry leader (model platform)",
+  "official_url": "https://platform.claude.com/docs/en/build-with-claude/compaction",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Two beta APIs: (1) **Compaction** (header compact-2026-01-12): when input tokens exceed a trigger, the server **summarizes** older turns into a compaction block and **drops** prior messages on subsequent requests—explicitly for long chats and tool-heavy agents. (2) **Context editing** (header context-management-2025-06-27): **clear_tool_uses** replaces old tool results with placeholders; **clear_thinking** trims extended-thinking blocks. Plus **prompt caching** for stable prefixes. This is **platform-managed** lossy compression vs. application-owned head/tail stores.",
+  "deployment_pattern": "Enable context_management.edits in Messages API; choose compaction trigger vs. selective tool clearing; cache system prompts and tool schemas.",
+  "benchmarks_eval_alignment": "N/A as product feature; Anthropic documents use cases (long sessions, agentic tool loops) rather than publishing Alex-style long-turn evals.",
+  "ecosystem_integrations": "Claude apps, Claude Code, Bedrock/Vertex, third-party hosts calling Messages API.",
+  "differentiators": "Compared to **Arize Alex**: Anthropic uses **server-side summarization** for compaction (closer to what DeLucia **rejected** as primary strategy) but pairs it with **deterministic tool-result clearing**—Alex instead uses **fixed head/tail heuristics + external DB retrieval** and rejected blind summarization for salience control.",
+  "significance_for_builders": "If you are on Claude, you can adopt **official compaction** instead of custom middle truncation—but still add **evals at turn N+1** (Alex lesson) because any lossy policy can fail late.",
+  "key_timeline_or_milestones": "Compaction beta compact-2026-01-12; context editing beta 2025-06-27; supported on Opus 4.6/4.7, Sonnet 4.6, Mythos preview per docs.",
+  "primary_sources": [
+    {"title": "Anthropic — Compaction", "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"},
+    {"title": "Anthropic — Context editing", "url": "https://platform.claude.com/docs/en/build-with-claude/context-editing"},
+    {"title": "Anthropic — Prompt caching", "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"}
+  ],
+  "uncertain": []
+}

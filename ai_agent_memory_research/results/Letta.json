@@ -1,0 +1,20 @@
+{
+  "name": "Letta (MemGPT lineage)",
+  "category": "Platform",
+  "official_url": "https://github.com/letta-ai/letta",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Letta continues the MemGPT idea: structured memory compartments—message buffer, editable core memory blocks, recall memory over full history, and archival memory backed by external stores. Agents can update memory via tools; background consolidation ('dreaming') is described in product docs.",
+  "deployment_pattern": "CLI, desktop app, Python/TypeScript SDKs; self-host or cloud per Letta deployment options in docs.",
+  "benchmarks_eval_alignment": "Academic MemGPT lineage; modern product claims should be checked against Letta release notes and blog benchmarks [uncertain].",
+  "ecosystem_integrations": "Vector/graph archival backends; integrates with agent tool loops; docs for Letta Code memory APIs.",
+  "differentiators": "First-class **agent-editable** memory blocks vs. passive log scraping; emphasizes persistent agent identity.",
+  "significance_for_builders": "Use when the product needs **explicit memory editing** and explainability (what the agent believes about the user) more than opaque embedding retrieval.",
+  "key_timeline_or_milestones": "Oct 2025 Letta blog on rearchitecting agent loop (MemGPT → tool-centric v1 lessons).",
+  "primary_sources": [
+    {"title": "letta-ai/letta", "url": "https://github.com/letta-ai/letta"},
+    {"title": "Letta — Agent Memory blog", "url": "https://letta.com/blog/agent-memory"},
+    {"title": "Letta docs — Memory", "url": "https://docs.letta.com/letta-code/memory/"},
+    {"title": "Letta — Rearchitecting Letta's Agent Loop", "url": "https://letta.com/blog/letta-v1-agent"}
+  ],
+  "uncertain": ["benchmarks_eval_alignment"]
+}

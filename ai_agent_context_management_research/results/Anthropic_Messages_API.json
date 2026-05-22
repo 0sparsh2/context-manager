@@ -1,0 +1,19 @@
+{
+  "name": "Anthropic Messages API (caching, compaction, context editing)",
+  "category": "Model platform",
+  "official_url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Prompt caching reuses computation for stable prompt prefixes (system, tools, large documents) via cache_control breakpoints. Compaction (beta) summarizes older conversation blocks when inputs approach limits and drops prior messages after inserting a compaction block; enabled with beta header compact-2026-01-12 and context_management edits on supported models (e.g. Sonnet 4.6, Opus 4.6/4.7, Mythos preview). Context editing (separate beta context-management-2025-06-27) offers finer strategies such as clearing tool results or thinking blocks to reclaim tokens without full conversation summarization.",
+  "deployment_pattern": "HTTP Messages API: attach cache_control to long static blocks; enable compaction/context_management in request JSON per docs; pair with client-side trimming of attachments for cost control.",
+  "benchmarks_eval_alignment": "N/A as a product; upstream models are scored on academic long-context benchmarks separately. API features improve latency/cost and effective usable horizon for the same model.",
+  "ecosystem_integrations": "Used by Claude apps, Claude Code, third-party hosts (Bedrock, Vertex), and any MCP host that calls Anthropic. Complements client-side RAG and external tool result storage.",
+  "differentiators": "Server-managed compaction plus explicit caching breakpoints; distinct from 'only send smaller prompts' in that the platform can summarize and truncate safely with structured blocks.",
+  "significance_for_builders": "Treat Anthropic as supplying three levers: (1) cache stable instructions and tool schemas, (2) use context editing for noisy tool I/O, (3) enable compaction for multi-hour agent transcripts instead of bespoke summarization chains.",
+  "key_timeline_or_milestones": "Prompt caching documented for Messages API; compaction doc references compact-2026-01-12; context editing strategies documented for 2025-06-27 beta.",
+  "primary_sources": [
+    {"title": "Prompt caching — Claude API", "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"},
+    {"title": "Compaction — Claude API", "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"},
+    {"title": "Context editing — Claude API", "url": "https://platform.claude.com/docs/en/build-with-claude/context-editing"}
+  ],
+  "uncertain": []
+}

@@ -1,0 +1,66 @@
+# Deep research (Phase 1) — AI agent memory & context retention
+# Methodology: .cursor/skills/deep-research + Weizhena/Deep-Research-skills + RhinoInsight (control + evidence)
+topic: "AI agent memory — DeLucia/Arize Alex vs industry leaders, papers, and benchmarks (2024–2026)"
+items:
+  - name: "How we solved Context Management in Agents — video interpretation (Sally-Ann DeLucia)"
+    category: Primary source / framing
+    description: What the AI Engineer talk is arguing about context vs. prompts; how it relates to production memory design.
+  - name: Agent memory market landscape
+    category: Market synthesis
+    description: How vendors segment long-term memory vs. prompt engineering vs. platform session state.
+  - name: Mem0 (open memory layer)
+    category: Product / OSS
+    description: Universal memory extraction and retrieval API; positioning vs. full-context chat.
+  - name: Zep (Graphiti temporal knowledge graph memory)
+    category: Product / research
+    description: Temporal KG memory service; enterprise retrieval claims and architecture.
+  - name: Letta (MemGPT lineage)
+    category: Platform
+    description: Core / recall / archival memory blocks; agent-editable memory and consolidation.
+  - name: OpenAI conversation state and Agents SDK sessions
+    category: Model platform
+    description: Server-side conversation objects, sessions, trimming/compression for agents.
+  - name: LangGraph checkpointing and thread persistence
+    category: Framework
+    description: Durable agent state in application graphs vs. model-native memory.
+  - name: Memory evaluation benchmarks (LOCOMO, LongMemEval, Deep Memory Retrieval)
+    category: Research / eval
+    description: How the field measures long-dialog and temporal memory quality.
+  - name: Anthropic API — compaction and context editing
+    category: Industry leader (model platform)
+    description: Server-side summarization vs selective tool/thinking clearing; compare to Arize head/tail + store.
+  - name: Claude Code — product context and compaction
+    category: Industry leader (agent product)
+    description: What Anthropic ships in the coding agent; speaker noted similarity to Alex truncation.
+  - name: OpenAI Agents SDK — sessions, trimming, and memory notes
+    category: Industry leader (model platform)
+    description: Official context-engineering cookbook patterns vs summarization rejection in talk.
+  - name: Google Gemini / ADK — context caching and window compression
+    category: Industry leader (model platform)
+    description: Cost/latency via cache; ADK compression for long agent sessions.
+  - name: Cursor IDE — rules, indexing, MCP
+    category: Industry leader (IDE host)
+    description: Project-scoped persistent instructions and tool bridge vs Alex memory store.
+  - name: GitHub Copilot / Microsoft — agent memory system
+    category: Industry leader (platform)
+    description: Scoped memories with citation verification; cross-agent memory on GitHub.
+  - name: Survey — Context Engineering for LLMs (arXiv 2507.13334)
+    category: Academic survey
+    description: Formal taxonomy of retrieval, processing, management; map Alex tactics to categories.
+  - name: RhinoInsight — control mechanisms for context (arXiv 2511.18743)
+    category: Academic / systems
+    description: Checklists + evidence audit vs Alex evals + sub-agents.
+  - name: Comparison synthesis — Arize Alex vs research and industry (2024–2026)
+    category: Synthesis
+    description: Cross-walk DeLucia production choices against papers and leader stacks.
+  - name: Karpathy LLM wiki + Obsidian (compiled knowledge)
+    category: Pattern / personal KG
+    description: Compiled markdown wiki pattern; cold memory vs session trim.
+  - name: Graphify (code/doc KG skill for coding agents)
+    category: Tool / compiled index
+    description: Pre-built repo graph + Obsidian export; optional build-time index.
+
+execution:
+  batch_size: 2
+  items_per_agent: 1
+  output_dir: "./ai_agent_memory_research/results"

@@ -1,0 +1,18 @@
+{
+  "name": "Graphify (code/doc KG skill for coding agents)",
+  "category": "Tool / compiled index",
+  "official_url": "https://graphify.net/",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "CLI/skill builds a knowledge graph from repo code (AST) + docs/PDFs/images; query/path/god-node discovery; exports graph.html, graph.json, GRAPH_REPORT.md, optional Obsidian vault (--obsidian). Targets token reduction vs reading entire codebase into context.",
+  "deployment_pattern": "One-time graphify on repo; agent uses graphify query in Cursor/Codex/Claude Code; optional Obsidian export for human + Karpathy-style browsing.",
+  "benchmarks_eval_alignment": "Project claims large token reduction vs raw file reads; reproduce on this repo before relying on numbers.",
+  "ecosystem_integrations": "Cursor, Claude Code, Codex, OpenCode per graphify.net; Neo4j/GraphML export.",
+  "differentiators": "vs Alex middle-store: precomputed **structure** for code, not conversational middle truncation; vs Copilot index: explicit graph queries and reports.",
+  "significance_for_builders": "Optional **build-time index** for Context Manager codebase + research folders; does not replace session context policy.",
+  "key_timeline_or_milestones": "Open-source safishamsi/graphify; PyPI graphifyy package.",
+  "primary_sources": [
+    {"title": "Graphify site", "url": "https://graphify.net/"},
+    {"title": "Graphify GitHub", "url": "https://github.com/safishamsi/graphify"}
+  ],
+  "uncertain": ["benchmarks_eval_alignment"]
+}

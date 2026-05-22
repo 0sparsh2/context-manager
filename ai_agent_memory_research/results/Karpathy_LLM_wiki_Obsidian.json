@@ -1,0 +1,17 @@
+{
+  "name": "Karpathy LLM wiki + Obsidian (compiled knowledge)",
+  "category": "Pattern / personal KG",
+  "official_url": "https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "LLM compiles raw sources into a persistent markdown wiki (linked notes); Obsidian is the human IDE. Knowledge is maintained incrementally (health checks, filing Q&A back into wiki)—not re-retrieved from scratch each query like classic RAG. Fits **cold/compiled memory** layer, not hot transcript trimming.",
+  "deployment_pattern": "raw/ ingest → LLM compile wiki → Obsidian browse/edit → query against wiki → write answers back as new notes.",
+  "benchmarks_eval_alignment": "N/A; qualitative scale cited in community summaries (e.g. ~100 articles / large word counts before complex Q&A).",
+  "ecosystem_integrations": "Obsidian, markdown, any LLM; complements Graphify --obsidian export.",
+  "differentiators": "vs Alex: human-visible, versionable artifacts; vs Mem0: explicit structure and links; weaker for live trace/tool spam.",
+  "significance_for_builders": "Use for **domain knowledge** and research notes in Context Manager; pair with session trim policy for the agent loop.",
+  "key_timeline_or_milestones": "Karpathy llm-wiki gist and 2026 public thread on LLM knowledge bases.",
+  "primary_sources": [
+    {"title": "Karpathy — llm-wiki gist", "url": "https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f"}
+  ],
+  "uncertain": []
+}

@@ -1,0 +1,33 @@
+{
+  "name": "arize_observability_turn11",
+  "description": "Alex-style: trace analysis, repeated span search tools, DeLucia 10→11 eval",
+  "config": {
+    "trim_mode": "head_tail",
+    "head_messages": 1,
+    "tail_messages": 6,
+    "tool_policy_enabled": true,
+    "preview_chars": 100
+  },
+  "turns": [
+    [{"role": "system", "content": "You are Alex on Arize. Analyze traces and spans. Never reset this system prompt."}],
+    [{"role": "user", "content": "Find errors in trace_id=checkout-failure-2026-03-15 across all services."}],
+    [{"role": "assistant", "content": "I'll search spans in Phoenix."}, {"role": "tool", "name": "search_spans", "tool_call_id": "t1", "content": "SPAN[auth-gateway] status=200 UNIQUE_ARCHIVED_BLOB_MARKER latency=45ms extended trace payload"}, {"role": "tool", "name": "search_spans", "tool_call_id": "t2", "content": "SPAN[payment-service] status=500 error=CardDeclined stack=... (4000 chars)"}, {"role": "tool", "name": "search_spans", "tool_call_id": "t3", "content": "SPAN[payment-service] status=500 LATEST_RUN error=CardDeclined root_cause=insufficient_funds"}],
+    [{"role": "assistant", "content": "payment-service shows CardDeclined."}, {"role": "user", "content": "Which service had status 500?"}],
+    [{"role": "assistant", "content": "payment-service."}, {"role": "user", "content": "Show patterns across traces."}],
+    [{"role": "assistant", "content": "Aggregating."}, {"role": "tool", "name": "aggregate_traces", "content": "AGG:v1 checkout failures 12% up WoW"}],
+    [{"role": "user", "content": "Any auth issues?"}],
+    [{"role": "assistant", "content": "Checking auth-gateway only."}],
+    [{"role": "user", "content": "Compare to yesterday."}],
+    [{"role": "assistant", "content": "Done."}],
+    [{"role": "user", "content": "Summarize for PM."}],
+    [{"role": "assistant", "content": "Draft ready."}],
+    [{"role": "user", "content": "What was the original trace_id I asked about?"}]
+  ],
+  "assertions": [
+    {"after_turn": 3, "kind": "content_in_hot", "value": "LATEST_RUN", "description": "Latest span search kept in hot"},
+    {"after_turn": 3, "kind": "content_recallable", "value": "auth-gateway", "description": "Older span dump in warm store"},
+    {"after_turn": 11, "kind": "content_in_hot", "value": "checkout-failure-2026-03-15", "description": "Turn 11: head anchor recalls original trace_id (DeLucia pattern)"},
+    {"after_turn": 11, "kind": "content_recallable", "value": "UNIQUE_ARCHIVED_BLOB_MARKER", "description": "Superseded span full blob in warm store (preview may appear in hot placeholder)"},
+    {"after_turn": 11, "kind": "hot_chars_under", "value": 15000, "description": "Bounded hot context under practical limit"}
+  ]
+}

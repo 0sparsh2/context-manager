@@ -1,0 +1,19 @@
+{
+  "name": "Long-context evaluation (NoLiMa, NeedleChain, Haystack-style)",
+  "category": "Research benchmarks",
+  "official_url": "https://arxiv.org/html/2502.05167v2",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Synthetic or semi-synthetic long prompts testing whether models retrieve or reason over distant content. NoLiMa reduces lexical overlap between needle and query. NeedleChain stresses settings where the entire context is query-relevant. Haystack-style work evaluates heterogeneous, noisy, retrieval-biased long contexts closer to agents.",
+  "deployment_pattern": "Researchers publish code + arXiv; practitioners use findings to sanity-check vendor 'infinite context' claims and to choose RAG vs. long-window strategies.",
+  "benchmarks_eval_alignment": "NoLiMa reports sharp accuracy drops for some models as length grows when overlap is controlled. NeedleChain argues classic NIAH can overestimate capability. Haystack-style benchmarks highlight failures under realistic noise and tool-like retrieval.",
+  "ecosystem_integrations": "Feeds into model cards, procurement diligence, and internal eval suites for enterprise agents.",
+  "differentiators": "Splits 'find a secret string' from 'reason over everything' from 'survive agentic mess'—distinct failure modes.",
+  "significance_for_builders": "Do not rely on a single NIAH demo; run task-specific evals (code + logs + tools) and assume retrieval quality matters as much as raw window size.",
+  "key_timeline_or_milestones": "NoLiMa 2025; NeedleChain 2025; Haystack Engineering arXiv 2510.07414 (agentic long-context).",
+  "primary_sources": [
+    {"title": "NoLiMa — Long-Context Evaluation Beyond Literal Matching", "url": "https://arxiv.org/html/2502.05167v2"},
+    {"title": "NeedleChain — Intact Long-Context Reasoning", "url": "https://arxiv.org/html/2507.22411v1"},
+    {"title": "Haystack Engineering — Agentic Long-Context Evaluation", "url": "https://arxiv.org/html/2510.07414v2"}
+  ],
+  "uncertain": []
+}

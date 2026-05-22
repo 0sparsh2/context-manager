@@ -1,0 +1,19 @@
+{
+  "name": "Google Gemini / ADK — context caching and window compression",
+  "category": "Industry leader (model platform)",
+  "official_url": "https://google.github.io/adk-docs/context/caching/",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "**Vertex/Gemini context caching**: implicit caching (Gemini 2.5+ discounts on repeated prefixes) and explicit cache API for large static context (docs, multimodal). **ADK** exposes ContextCacheConfig (TTL, min tokens) and **context_window_compression** in RunConfig for long-running agents—platform focuses on **cost/latency of repeated prefixes** more than application semantic memory. Million-token windows reduce pressure but do not replace curation.",
+  "deployment_pattern": "Enable caching for static system+docs blocks; ADK compression for marathon sessions; still design tool-output clearing in agent loop.",
+  "benchmarks_eval_alignment": "Google publishes caching economics; agent memory quality benchmarks cited by Mem0/Zep not native to ADK docs.",
+  "ecosystem_integrations": "Vertex AI, Gemini API, ADK multi-agent apps.",
+  "differentiators": "vs. **Alex**: Google leads with **cache hit economics** on huge windows; Alex leads with **semantic selection** (what spans matter) on observability payloads. Complementary: cache stable instructions, still truncate tool spam like Alex.",
+  "significance_for_builders": "If your workload repeats massive static context (specs, traces templates), **cache** first; if dynamic trace search dominates, **sub-agents + retrieval** (Alex) beat caching alone.",
+  "key_timeline_or_milestones": "Gemini 2.5 implicit caching blog May 2025; ADK context caching docs.",
+  "primary_sources": [
+    {"title": "Google Cloud — Context caching overview", "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview"},
+    {"title": "ADK — Context caching", "url": "https://google.github.io/adk-docs/context/caching/"},
+    {"title": "Google Developers Blog — Gemini 2.5 implicit caching", "url": "https://developers.googleblog.com/gemini-2-5-models-now-support-implicit-caching/"}
+  ],
+  "uncertain": []
+}

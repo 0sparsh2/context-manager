@@ -1,0 +1,19 @@
+{
+  "name": "Arize / Sally-Ann DeLucia talk — production agent context",
+  "category": "Industry perspective",
+  "official_url": "https://youtu.be/esY99nYXxR4",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Talk titled 'How we solved Context Management in Agents' (AI Engineer channel) frames context overload as dominant failure mode for agents. Arize public writing emphasizes hierarchical memory, selective retention, and observability over naive truncation or brittle full auto-summarization.",
+  "deployment_pattern": "Teams pair tracing/evals (Arize Phoenix, etc.) with explicit memory policies; align with research on control mechanisms for deep research (RhinoInsight) cited by Deep-Research-skills README.",
+  "benchmarks_eval_alignment": "Qualitative production lessons; complements academic long-context benchmarks by focusing on operational trace growth.",
+  "ecosystem_integrations": "LLM observability stacks, evaluation harnesses, agent frameworks (LangGraph/LangChain mentioned in adjacent ecosystem though not exclusive).",
+  "differentiators": "Product + research voice from applied ML observability vendor vs. pure model lab.",
+  "significance_for_builders": "Instrument what enters the prompt (tool outputs, retries, duplicated errors) before blaming the base model; design memory writes as explicit events, not side effects of unlimited chat.",
+  "key_timeline_or_milestones": "YouTube talk 2025/2026 catalog; Arize blog series on agents and memory management.",
+  "primary_sources": [
+    {"title": "YouTube — How we solved Context Management in Agents (Sally-Ann Delucia)", "url": "https://youtu.be/esY99nYXxR4"},
+    {"title": "Arize — Managing LLM context windows for AI agents", "url": "https://arize.com/blog/how-to-manage-llm-context-windows-for-ai-agents/"},
+    {"title": "Deep Research Skills README — RhinoInsight reference", "url": "https://github.com/Weizhena/Deep-Research-skills"}
+  ],
+  "uncertain": []
+}

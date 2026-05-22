@@ -1,0 +1,18 @@
+{
+  "name": "RhinoInsight — control mechanisms for context (arXiv 2511.18743)",
+  "category": "Academic / systems",
+  "official_url": "https://arxiv.org/html/2511.18743v1",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Nov 2025 framework (DeepLang/Tsinghua) attacking **context rot** in deep research agents via: (1) **Verifiable checklist**—requirements → sub-goals + critic + hierarchical outline; (2) **Evidence audit**—structure search results, prune noise, rank/bind evidence to draft sections. No weight updates; SOTA on deep research tasks per paper. Inspired structured skills like Weizhena/Deep-Research-skills.",
+  "deployment_pattern": "Human-in-the-loop outline approval; evidence-bound writing; prune before each model call—complements rather than replaces truncation.",
+  "benchmarks_eval_alignment": "Paper reports deep-research and deep-search benchmarks; different from Alex's 10→11 turn session eval but same **test before user sees failure** ethos.",
+  "ecosystem_integrations": "Claude Code skill ports (Deep-Research-skills).",
+  "differentiators": "vs. **Alex**: RhinoInsight controls **what enters research drafts** via checklists/audit; Alex controls **telemetry volume** via truncation/sub-agents. Both reject unbounded linear accumulation. RhinoInsight is **process control**; Alex is **storage geometry + delegation**.",
+  "significance_for_builders": "Combine: RhinoInsight-style **outline + evidence** for research/report agents; Alex-style **head/tail + recall** for tool-heavy ops agents.",
+  "key_timeline_or_milestones": "arXiv:2511.18743 November 2025.",
+  "primary_sources": [
+    {"title": "RhinoInsight paper (HTML)", "url": "https://arxiv.org/html/2511.18743v1"},
+    {"title": "RhinoInsight PDF", "url": "https://arxiv.org/pdf/2511.18743"}
+  ],
+  "uncertain": []
+}

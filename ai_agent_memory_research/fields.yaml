@@ -1,0 +1,70 @@
+# Field schema for deep-research JSON (flat keys at top level per validate_json.py).
+field_categories:
+  - category: Basic Info
+    fields:
+      - name: name
+        description: Canonical name of the item researched
+        detail_level: brief
+        required: true
+      - name: category
+        description: Segment label (e.g. Model platform, Benchmark)
+        detail_level: brief
+        required: true
+      - name: official_url
+        description: Primary documentation or product URL
+        detail_level: brief
+        required: false
+      - name: last_updated_as_of
+        description: As-of date for facts in this JSON (ISO-8601 date)
+        detail_level: brief
+        required: true
+
+  - category: Technical Features
+    fields:
+      - name: context_primitives
+        description: Concrete mechanisms (caching breakpoints, compaction, RAG, indexing, protocol messages, etc.)
+        detail_level: detailed
+        required: true
+      - name: deployment_pattern
+        description: How builders typically wire it (API flags, config files, env vars, IDE settings)
+        detail_level: moderate
+        required: true
+
+  - category: Performance Metrics
+    fields:
+      - name: benchmarks_eval_alignment
+        description: Relevant benchmarks, scores, or qualitative findings; use N/A if not applicable
+        detail_level: moderate
+        required: true
+
+  - category: Competition & Ecosystem
+    fields:
+      - name: ecosystem_integrations
+        description: MCP, Git, IDEs, vector DBs, observability tools, or adjacent standards
+        detail_level: moderate
+        required: true
+      - name: differentiators
+        description: What distinguishes this item from adjacent approaches
+        detail_level: moderate
+        required: true
+
+  - category: Milestone Significance
+    fields:
+      - name: significance_for_builders
+        description: Actionable implication for teams designing agent context
+        detail_level: detailed
+        required: true
+
+  - category: History
+    fields:
+      - name: key_timeline_or_milestones
+        description: Releases, spec dates, or paper versions worth citing
+        detail_level: moderate
+        required: true
+
+  - category: Market Positioning
+    fields:
+      - name: primary_sources
+        description: List of {title, url} objects used for this entry
+        detail_level: detailed
+        required: true

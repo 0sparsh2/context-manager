@@ -1,0 +1,25 @@
+{
+  "name": "subagent_delegation",
+  "description": "Correct sub-agent pattern: parent transcript only receives compact result message, not sub-agent tool I/O",
+  "config": {
+    "trim_mode": "head_tail",
+    "head_messages": 1,
+    "tail_messages": 4,
+    "tool_policy_enabled": false
+  },
+  "turns": [
+    [{"role": "system", "content": "Main orchestrator agent."}],
+    [{"role": "user", "content": "Search all traces for payment failures in last 24h."}],
+    [{"role": "assistant", "content": "Delegating to search sub-agent (internal run omitted from this thread)."}],
+    [{"role": "assistant", "content": "SUBAGENT_RESULT: scanned 847 spans; 3 payment failures; root cause insufficient_funds on payment-service."}],
+    [{"role": "user", "content": "How many spans did you scan?"}],
+    [{"role": "assistant", "content": "847 spans."}, {"role": "user", "content": "Root cause?"}],
+    [{"role": "assistant", "content": "insufficient_funds on payment-service."}]
+  ],
+  "assertions": [
+    {"after_turn": 4, "kind": "content_in_hot", "value": "SUBAGENT_RESULT", "description": "Main thread has compact subagent result only"},
+    {"after_turn": 4, "kind": "content_not_in_hot", "value": "SUBAGENT_INTERNAL_RAW", "description": "Heavy subagent dump never added to parent transcript"},
+    {"after_turn": 7, "kind": "content_in_hot", "value": "insufficient_funds", "description": "Answer chain preserved in tail"},
+    {"after_turn": 7, "kind": "hot_chars_under", "value": 2500, "description": "Parent thread stays small without tool spam"}
+  ]
+}

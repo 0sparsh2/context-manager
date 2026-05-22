@@ -1,0 +1,19 @@
+{
+  "name": "Model Context Protocol (MCP)",
+  "category": "Standard",
+  "official_url": "https://modelcontextprotocol.io/specification/latest",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "JSON-RPC client/server protocol: tools (model-invoked actions), resources (URI-addressable read-only data), prompts (templates). Hosts spawn clients per server with user consent boundaries.",
+  "deployment_pattern": "Declare MCP servers in host config (Cursor, Claude Desktop, Codex, etc.); implement servers in TS/Python/Go; expose least-privilege capabilities per integration.",
+  "benchmarks_eval_alignment": "N/A protocol-level; adoption measured by ecosystem size and host support.",
+  "ecosystem_integrations": "Bridges LLM hosts to filesystems, SaaS APIs, databases, browsers (via server implementations).",
+  "differentiators": "Replaces N bespoke plugins per vendor with one interoperable surface for tools and resources.",
+  "significance_for_builders": "Move bulky or sensitive context out of the prompt: fetch on demand via resources/tools instead of dumping logs into chat.",
+  "key_timeline_or_milestones": "Anthropic announced MCP November 2024; specification evolves with dated releases on modelcontextprotocol.io.",
+  "primary_sources": [
+    {"title": "Model Context Protocol — Specification", "url": "https://modelcontextprotocol.io/specification/latest"},
+    {"title": "Anthropic — Introducing the Model Context Protocol", "url": "https://www.anthropic.com/news/model-context-protocol"},
+    {"title": "MCP — Architecture overview", "url": "https://modelcontextprotocol.io/docs/learn"}
+  ],
+  "uncertain": []
+}

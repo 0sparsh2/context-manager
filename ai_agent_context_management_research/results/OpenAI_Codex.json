@@ -1,0 +1,18 @@
+{
+  "name": "OpenAI Codex (AGENTS.md, skills, MCP, subagents)",
+  "category": "Agent product",
+  "official_url": "https://developers.openai.com/codex/concepts/customization",
+  "last_updated_as_of": "2026-05-14",
+  "context_primitives": "Repository-local AGENTS.md for standing instructions; Skills for reusable workflows; Memories for durable notes; MCP for external tools/resources; subagents to delegate focused subtasks with isolated transcripts.",
+  "deployment_pattern": "Codex CLI or IDE flows read AGENTS.md automatically; enable MCP servers in config; users curate skills and memories instead of pasting repeat context.",
+  "benchmarks_eval_alignment": "Codex models appear on coding leaderboards; context features are not separately scored in public SWE tables.",
+  "ecosystem_integrations": "GitHub, VS Code family, MCP servers, optional hosted execution.",
+  "differentiators": "Explicit multi-layer customization (memories + skills + agents) marketed for long-horizon coding agents vs. single chat thread only.",
+  "significance_for_builders": "Mirror the pattern: pin stable norms in AGENTS.md, push procedural playbooks to skills, push volatile investigation notes to memories, push integrations to MCP.",
+  "key_timeline_or_milestones": "OpenAI Codex documentation emphasizes customization stack in 2025 public preview materials.",
+  "primary_sources": [
+    {"title": "OpenAI Codex — Customization", "url": "https://developers.openai.com/codex/concepts/customization"},
+    {"title": "OpenAI Codex — Best practices", "url": "https://developers.openai.com/codex/learn/best-practices"}
+  ],
+  "uncertain": []
+}

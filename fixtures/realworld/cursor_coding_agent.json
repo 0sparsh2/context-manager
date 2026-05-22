@@ -1,0 +1,26 @@
+{
+  "name": "cursor_coding_agent",
+  "description": "IDE agent: many read_file/grep tools, follow-up references earlier file content",
+  "config": {
+    "trim_mode": "head_tail",
+    "head_messages": 2,
+    "tail_messages": 8,
+    "tool_policy_enabled": true
+  },
+  "turns": [
+    [{"role": "system", "content": "You are a coding agent in Cursor. Follow project rules."}],
+    [{"role": "user", "content": "Fix the bug in src/context_manager/session.py where hot context double-archives."}],
+    [{"role": "assistant", "content": "Reading files."}, {"role": "tool", "name": "read_file", "content": "session.py: def get_hot_context ... (800 lines)"}, {"role": "tool", "name": "read_file", "content": "trim.py: HeadTailTrimPolicy ..."}, {"role": "tool", "name": "grep", "content": "archived: 12 matches in policies/"}, {"role": "tool", "name": "read_file", "content": "KEY_FINDING: duplicate save when tool+trim both archive same message"}],
+    [{"role": "assistant", "content": "I see duplicate archiving."}, {"role": "user", "content": "Apply minimal fix."}],
+    [{"role": "assistant", "content": "Patching."}, {"role": "tool", "name": "run_terminal", "content": "pytest -q ...... passed"}],
+    [{"role": "user", "content": "What was KEY_FINDING from the reads?"}],
+    [{"role": "assistant", "content": "Let me check."}],
+    [{"role": "user", "content": "Also which file had HeadTailTrimPolicy?"}]
+  ],
+  "assertions": [
+    {"after_turn": 3, "kind": "content_in_hot", "value": "KEY_FINDING", "description": "Latest read_file with finding stays hot"},
+    {"after_turn": 3, "kind": "content_recallable", "value": "session.py: def get_hot_context", "description": "Earlier file read recallable from store"},
+    {"after_turn": 7, "kind": "content_recallable", "value": "HeadTailTrimPolicy", "description": "Mid-session file content recallable at follow-up"},
+    {"after_turn": 7, "kind": "content_in_hot", "value": "Fix the bug in src/context_manager", "description": "Original user task preserved in head"}
+  ]
+}
