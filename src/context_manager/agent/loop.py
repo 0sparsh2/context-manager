@@ -128,15 +128,20 @@ class MinimalAgentLoop:
             assistant_parts.append(f"Recalled from warm store: {summary[:500]}")
 
         hot_after = self.session.get_hot_context()
+        hot_chars = sum(m.char_count() for m in hot_after)
+        full_chars = self.session.total_chars()
+        # Archived placeholders can occasionally inflate hot-context character count.
+        # For reporting consistency, avoid printing impossible "hot > full" ratios.
+        reported_full_chars = max(full_chars, hot_chars)
         return AgentTurnResult(
             turn=self._turn,
             user_text=user_text,
             assistant_text="\n".join(assistant_parts) if assistant_parts else "",
             tool_names=tool_names,
             hot_messages=len(hot_after),
-            hot_chars=self.session.hot_char_count(),
+            hot_chars=hot_chars,
             full_messages=len(self.session.messages),
-            full_chars=self.session.total_chars(),
+            full_chars=reported_full_chars,
             archived_segments=len(self.session.list_archived_segments()),
             recall_happened=recall_happened,
             notes=notes,

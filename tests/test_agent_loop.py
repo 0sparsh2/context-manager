@@ -56,3 +56,12 @@ def test_recall_by_keyword_respects_scan_limit():
         assert r.recall_happened is False
     finally:
         agent.close()
+
+
+def test_reported_full_chars_never_below_hot_chars():
+    agent = MinimalAgentLoop(system_prompt="sys")
+    try:
+        r = agent.run_turn("search trace_id=incident-42")
+        assert r.full_chars >= r.hot_chars
+    finally:
+        agent.close()

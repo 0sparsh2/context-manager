@@ -1,0 +1,301 @@
+{
+  "analysis_date": "2026-05-27",
+  "baseline": "Context Manager",
+  "method": {
+    "deep_research_phases": [
+      "Phase 1: outline and framework",
+      "Phase 2: evidence collection and source validation",
+      "Phase 3: synthesis with evidence vs inference separation"
+    ],
+    "tool_discovery": {
+      "baseline_included": true,
+      "consistent_criteria": true,
+      "primary_and_fallback_recommendation": true
+    }
+  },
+  "criteria": [
+    "research_coverage",
+    "engineering_maturity",
+    "efficacy_performance",
+    "design_distribution_ux",
+    "observability_operability",
+    "ci_deployment_readiness"
+  ],
+  "options": [
+    {
+      "name": "Context Manager",
+      "type": "baseline",
+      "strengths": [
+        "Deterministic head_tail and last_n trimming",
+        "Tool-result archival with warm SQLite store",
+        "Auditable full transcript retention",
+        "Long-session fixture evaluator"
+      ],
+      "gaps": [
+        "No cross-session semantic memory",
+        "No temporal fact model",
+        "Limited observability surface",
+        "No benchmark CI gates for quality/latency/cost"
+      ],
+      "scores_1_to_5": {
+        "research_coverage": 4,
+        "engineering_maturity": 3,
+        "efficacy_performance": 2,
+        "design_distribution_ux": 2,
+        "observability_operability": 2,
+        "ci_deployment_readiness": 2
+      },
+      "evidence_urls": [
+        "README.md",
+        "BUILD_READINESS.md"
+      ],
+      "uncertainty": "low"
+    },
+    {
+      "name": "Anthropic compaction + context editing",
+      "type": "model_platform",
+      "scores_1_to_5": {
+        "research_coverage": 4,
+        "engineering_maturity": 4,
+        "efficacy_performance": 3,
+        "design_distribution_ux": 4,
+        "observability_operability": 3,
+        "ci_deployment_readiness": 3
+      },
+      "evidence_urls": [
+        "https://platform.claude.com/docs/en/build-with-claude/compaction",
+        "https://platform.claude.com/docs/en/build-with-claude/context-editing",
+        "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+      ],
+      "uncertainty": "medium"
+    },
+    {
+      "name": "OpenAI Agents sessions + memory patterns",
+      "type": "model_platform",
+      "scores_1_to_5": {
+        "research_coverage": 4,
+        "engineering_maturity": 4,
+        "efficacy_performance": 3,
+        "design_distribution_ux": 4,
+        "observability_operability": 3,
+        "ci_deployment_readiness": 3
+      },
+      "evidence_urls": [
+        "https://developers.openai.com/cookbook/examples/agents_sdk/session_memory",
+        "https://developers.openai.com/api/docs/guides/conversation-state",
+        "https://github.com/openai/openai-agents-python/blob/main/docs/sessions/index.md"
+      ],
+      "uncertainty": "medium"
+    },
+    {
+      "name": "Google Gemini ADK caching + compaction",
+      "type": "model_platform",
+      "scores_1_to_5": {
+        "research_coverage": 3,
+        "engineering_maturity": 4,
+        "efficacy_performance": 3,
+        "design_distribution_ux": 3,
+        "observability_operability": 3,
+        "ci_deployment_readiness": 3
+      },
+      "evidence_urls": [
+        "https://google.github.io/adk-docs/context/caching/",
+        "https://adk.dev/context/compaction/",
+        "https://cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview"
+      ],
+      "uncertainty": "medium"
+    },
+    {
+      "name": "GitHub Copilot Memory",
+      "type": "product_platform",
+      "scores_1_to_5": {
+        "research_coverage": 3,
+        "engineering_maturity": 5,
+        "efficacy_performance": 4,
+        "design_distribution_ux": 5,
+        "observability_operability": 4,
+        "ci_deployment_readiness": 4
+      },
+      "evidence_urls": [
+        "https://docs.github.com/en/copilot/concepts/agents/copilot-memory",
+        "https://github.blog/ai-and-ml/github-copilot/building-an-agentic-memory-system-for-github-copilot/",
+        "https://code.visualstudio.com/docs/copilot/agents/memory"
+      ],
+      "uncertainty": "medium"
+    },
+    {
+      "name": "Cursor rules + MCP patterns",
+      "type": "ide_host",
+      "scores_1_to_5": {
+        "research_coverage": 3,
+        "engineering_maturity": 4,
+        "efficacy_performance": 3,
+        "design_distribution_ux": 5,
+        "observability_operability": 3,
+        "ci_deployment_readiness": 3
+      },
+      "evidence_urls": [
+        "https://cursor.com/docs/rules",
+        "https://cursor.com/docs/mcp"
+      ],
+      "uncertainty": "medium"
+    },
+    {
+      "name": "Mem0",
+      "type": "memory_layer",
+      "scores_1_to_5": {
+        "research_coverage": 4,
+        "engineering_maturity": 4,
+        "efficacy_performance": 4,
+        "design_distribution_ux": 3,
+        "observability_operability": 3,
+        "ci_deployment_readiness": 3
+      },
+      "evidence_urls": [
+        "https://github.com/mem0ai/mem0",
+        "https://docs.mem0.ai/core-concepts/memory-evaluation",
+        "https://github.com/mem0ai/memory-benchmarks"
+      ],
+      "uncertainty": "high_vendor_benchmark_claims"
+    },
+    {
+      "name": "Zep / Graphiti",
+      "type": "memory_layer_temporal",
+      "scores_1_to_5": {
+        "research_coverage": 4,
+        "engineering_maturity": 4,
+        "efficacy_performance": 4,
+        "design_distribution_ux": 3,
+        "observability_operability": 4,
+        "ci_deployment_readiness": 3
+      },
+      "evidence_urls": [
+        "https://docs.getzep.com/",
+        "https://github.com/getzep/graphiti",
+        "https://arxiv.org/abs/2501.13956"
+      ],
+      "uncertainty": "medium_high"
+    },
+    {
+      "name": "Letta",
+      "type": "memory_platform",
+      "scores_1_to_5": {
+        "research_coverage": 3,
+        "engineering_maturity": 4,
+        "efficacy_performance": 3,
+        "design_distribution_ux": 4,
+        "observability_operability": 3,
+        "ci_deployment_readiness": 3
+      },
+      "evidence_urls": [
+        "https://github.com/letta-ai/letta",
+        "https://docs.letta.com/letta-code/memory/",
+        "https://www.letta.com/blog/letta-v1-agent"
+      ],
+      "uncertainty": "medium_architecture_transition"
+    },
+    {
+      "name": "LangGraph",
+      "type": "orchestration_framework",
+      "scores_1_to_5": {
+        "research_coverage": 3,
+        "engineering_maturity": 5,
+        "efficacy_performance": 3,
+        "design_distribution_ux": 3,
+        "observability_operability": 4,
+        "ci_deployment_readiness": 4
+      },
+      "evidence_urls": [
+        "https://docs.langchain.com/oss/python/langgraph/persistence",
+        "https://docs.langchain.com/oss/python/langgraph/add-memory"
+      ],
+      "uncertainty": "low"
+    },
+    {
+      "name": "LlamaIndex Memory",
+      "type": "additional_alternative",
+      "scores_1_to_5": {
+        "research_coverage": 3,
+        "engineering_maturity": 4,
+        "efficacy_performance": 3,
+        "design_distribution_ux": 3,
+        "observability_operability": 3,
+        "ci_deployment_readiness": 3
+      },
+      "evidence_urls": [
+        "https://developers.llamaindex.ai/python/framework/module_guides/deploying/agents/memory/",
+        "https://developers.llamaindex.ai/python/examples/memory/memory/"
+      ],
+      "uncertainty": "medium"
+    },
+    {
+      "name": "Redis + LangGraph memory stack",
+      "type": "additional_alternative",
+      "scores_1_to_5": {
+        "research_coverage": 3,
+        "engineering_maturity": 4,
+        "efficacy_performance": 3,
+        "design_distribution_ux": 3,
+        "observability_operability": 4,
+        "ci_deployment_readiness": 4
+      },
+      "evidence_urls": [
+        "https://redis.io/tutorials/what-is-agent-memory-example-using-langgraph-and-redis/",
+        "https://github.com/redis-developer/langgraph-redis"
+      ],
+      "uncertainty": "medium"
+    },
+    {
+      "name": "Semantic Kernel VectorData memory layer",
+      "type": "additional_alternative",
+      "scores_1_to_5": {
+        "research_coverage": 3,
+        "engineering_maturity": 4,
+        "efficacy_performance": 3,
+        "design_distribution_ux": 3,
+        "observability_operability": 3,
+        "ci_deployment_readiness": 4
+      },
+      "evidence_urls": [
+        "https://learn.microsoft.com/en-us/semantic-kernel/concepts/vector-store-connectors/memory-stores",
+        "https://learn.microsoft.com/en-us/dotnet/ai/conceptual/mevd-library"
+      ],
+      "uncertainty": "medium"
+    }
+  ],
+  "primary_recommendation": {
+    "name": "Hybrid: Context Manager core + provider compaction adapters + Mem0-first semantic memory",
+    "why": [
+      "Preserves deterministic in-session policy strengths already implemented",
+      "Adds durable cross-session memory where baseline is currently weakest",
+      "Avoids single-vendor lock-in via adapter architecture"
+    ],
+    "risk_controls": [
+      "Feature flags for each memory/compaction backend",
+      "Benchmark gates in CI for recall, latency, and token budgets",
+      "Citation verification mode for recalled facts"
+    ]
+  },
+  "fallback_recommendation": {
+    "name": "LangGraph + Redis profile with Context Manager policies as middleware",
+    "when_to_choose": [
+      "Need production-ready persistence primitives quickly",
+      "Team already invested in LangChain/LangGraph ecosystem"
+    ],
+    "tradeoff": "Less differentiated policy layer unless Context Manager remains explicit in prompt/context pipeline"
+  },
+  "top_gaps": [
+    "Cross-session semantic memory absent",
+    "No benchmark-grade efficacy harness in CI",
+    "Limited memory observability and governance",
+    "No provider-aware compaction abstraction",
+    "No citation/freshness verification for recalled facts"
+  ],
+  "top_actions": [
+    "Build MemoryBackend interface and Mem0 adapter behind feature flag",
+    "Build provider compaction adapter for Anthropic/OpenAI/Google",
+    "Add benchmark CI gates (quality, latency, token cost)",
+    "Add telemetry for recall hit/miss and compaction events",
+    "Implement citation verification workflow for recalled memory"
+  ]
+}
