@@ -13,6 +13,7 @@ dependencies = []
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
 llm = ["openai>=1.0", "python-dotenv>=1.0"]
+memory = ["mem0ai>=0.1.112"]
 
 [project.scripts]
 context-manager = "context_manager.cli:main"

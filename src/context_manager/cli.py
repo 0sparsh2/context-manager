@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -68,10 +69,13 @@ def cmd_inspect(args: argparse.Namespace) -> int:
     session = ContextSession.create(
         config=ContextConfig(
             trim_mode=TrimMode(case.config.get("trim_mode", "head_tail")),
+            provider_name=str(case.config.get("provider_name", "mock")),
             keep_last_n=int(case.config.get("keep_last_n", 12)),
             head_messages=int(case.config.get("head_messages", 1)),
             tail_messages=int(case.config.get("tail_messages", 6)),
             tool_policy_enabled=bool(case.config.get("tool_policy_enabled", True)),
+            recall_require_verified=bool(case.config.get("recall_require_verified", False)),
+            recall_max_age_seconds=int(case.config.get("recall_max_age_seconds", 60 * 60 * 24 * 14)),
         )
     )
     try:
@@ -87,6 +91,34 @@ def cmd_inspect(args: argparse.Namespace) -> int:
             for i, m in enumerate(hot):
                 preview = m.content[:120].replace("\n", " ")
                 print(f"  [{i}] {m.role}: {preview}")
+    finally:
+        session.close()
+    return 0
+
+
+def cmd_diag(args: argparse.Namespace) -> int:
+    case = EvalCase.load(args.fixture)
+    session = ContextSession.create(
+        config=ContextConfig(
+            trim_mode=TrimMode(case.config.get("trim_mode", "head_tail")),
+            provider_name=str(case.config.get("provider_name", "mock")),
+            keep_last_n=int(case.config.get("keep_last_n", 12)),
+            head_messages=int(case.config.get("head_messages", 1)),
+            tail_messages=int(case.config.get("tail_messages", 6)),
+            tool_policy_enabled=bool(case.config.get("tool_policy_enabled", True)),
+            recall_require_verified=bool(case.config.get("recall_require_verified", False)),
+            recall_max_age_seconds=int(case.config.get("recall_max_age_seconds", 60 * 60 * 24 * 14)),
+        )
+    )
+    try:
+        for turn in case.turns:
+            for raw in turn:
+                session.append(Message.from_dict(raw))
+        print("compaction_trace:")
+        print(json.dumps(session.compaction_diagnostics(), indent=2))
+        for seg in session.list_archived_segments()[: args.limit]:
+            print(f"\nrecall_trace segment={seg.id}")
+            print(json.dumps(session.recall_diagnostics(seg.id), indent=2))
     finally:
         session.close()
     return 0
@@ -138,6 +170,11 @@ def main(argv: list[str] | None = None) -> int:
     p_inspect.add_argument("fixture", type=str)
     p_inspect.add_argument("-v", "--verbose", action="store_true")
     p_inspect.set_defaults(func=cmd_inspect)
+
+    p_diag = sub.add_parser("diag", help="Print recall + compaction diagnostics for a fixture")
+    p_diag.add_argument("fixture", type=str)
+    p_diag.add_argument("--limit", type=int, default=3, help="Max archived segments to inspect")
+    p_diag.set_defaults(func=cmd_diag)
 
     args = parser.parse_args(argv)
     return args.func(args)

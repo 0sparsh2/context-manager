@@ -4,6 +4,7 @@ import json
 from typing import Any, Protocol
 
 from context_manager.errors import (
+    ErrorCode,
     ErrorEnvelope,
     LLMAuthError,
     LLMProviderError,
@@ -95,27 +96,30 @@ class OpenAIChatAdapter:
             if name in {"APITimeoutError", "ReadTimeout"}:
                 raise LLMTimeoutError(
                     ErrorEnvelope(
-                        code="E_LLM_TIMEOUT",
+                        code=ErrorCode.LLM_TIMEOUT,
                         message=f"LLM request timed out for provider={self.config.provider}",
                         component="openai_adapter",
                         retryable=True,
+                        boundary="provider_adapter",
                     )
                 ) from exc
             if name in {"AuthenticationError", "PermissionDeniedError"}:
                 raise LLMAuthError(
                     ErrorEnvelope(
-                        code="E_LLM_AUTH",
+                        code=ErrorCode.LLM_AUTH,
                         message="LLM authentication failed. Check API key and permissions.",
                         component="openai_adapter",
                         retryable=False,
+                        boundary="provider_adapter",
                     )
                 ) from exc
             raise LLMProviderError(
                 ErrorEnvelope(
-                    code="E_LLM_PROVIDER",
+                    code=ErrorCode.LLM_PROVIDER,
                     message=f"LLM provider request failed: {name}",
                     component="openai_adapter",
                     retryable=False,
+                    boundary="provider_adapter",
                 )
             ) from exc
 

@@ -68,3 +68,38 @@ def test_metrics_hook_emits_trim_and_recall():
         assert "context.recall_attempt" in names
     finally:
         session.close()
+
+
+def test_recall_freshness_gate_blocks_old_segments():
+    session = ContextSession.create(
+        config=ContextConfig(
+            trim_mode=TrimMode.HEAD_TAIL,
+            head_messages=1,
+            tail_messages=1,
+            recall_max_age_seconds=-1,
+        )
+    )
+    try:
+        session.append(Message("system", "sys"))
+        session.append(Message("user", "head"))
+        session.append(Message("user", "middle"))
+        session.append(Message("assistant", "tail"))
+        session.get_hot_context()
+        seg = session.list_archived_segments()[0]
+        assert session.recall(seg.id) is None
+        diag = session.recall_diagnostics(seg.id)
+        assert diag["allowed"] is False
+    finally:
+        session.close()
+
+
+def test_compaction_diagnostics_exposes_strategy():
+    session = ContextSession.create(config=ContextConfig(provider_name="nim"))
+    try:
+        for i in range(8):
+            session.append(Message("user", f"msg:{i}"))
+        trace = session.compaction_diagnostics()
+        assert trace["strategy"] == "capability_aware_v1"
+        assert trace["provider"] == "nim"
+    finally:
+        session.close()

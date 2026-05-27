@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import sqlite3
+import time
 import uuid
 from pathlib import Path
 
-from context_manager.errors import ErrorEnvelope, StoreError
+from context_manager.errors import ErrorCode, ErrorEnvelope, StoreError
 from context_manager.models import Segment
 
 
@@ -29,10 +30,23 @@ class SQLiteSegmentStore:
                     preview TEXT NOT NULL,
                     content TEXT NOT NULL,
                     name TEXT,
-                    tool_call_id TEXT
+                    tool_call_id TEXT,
+                    created_at_unix REAL NOT NULL DEFAULT 0,
+                    verified_at_unix REAL NOT NULL DEFAULT 0,
+                    source TEXT NOT NULL DEFAULT 'session'
                 )
                 """
             )
+            cols = {
+                str(r["name"])
+                for r in self._conn.execute("PRAGMA table_info(segments)").fetchall()
+            }
+            if "created_at_unix" not in cols:
+                self._conn.execute("ALTER TABLE segments ADD COLUMN created_at_unix REAL NOT NULL DEFAULT 0")
+            if "verified_at_unix" not in cols:
+                self._conn.execute("ALTER TABLE segments ADD COLUMN verified_at_unix REAL NOT NULL DEFAULT 0")
+            if "source" not in cols:
+                self._conn.execute("ALTER TABLE segments ADD COLUMN source TEXT NOT NULL DEFAULT 'session'")
             self._conn.execute(
                 "CREATE INDEX IF NOT EXISTS idx_segments_session ON segments(session_id)"
             )
@@ -40,10 +54,11 @@ class SQLiteSegmentStore:
         except sqlite3.Error as exc:
             raise StoreError(
                 ErrorEnvelope(
-                    code="E_STORE",
+                    code=ErrorCode.STORE,
                     message=f"Failed to initialize segment store: {exc}",
                     component="sqlite_store",
                     retryable=False,
+                    boundary="storage",
                 )
             ) from exc
 
@@ -58,28 +73,45 @@ class SQLiteSegmentStore:
         name: str | None = None,
         tool_call_id: str | None = None,
         segment_id: str | None = None,
+        verified: bool = False,
+        source: str = "session",
     ) -> Segment:
         seg_id = segment_id or str(uuid.uuid4())
         preview = content[:preview_chars]
         if len(content) > preview_chars:
             preview += "…"
+        created_at = time.time()
+        verified_at = created_at if verified else 0.0
         try:
             self._conn.execute(
                 """
                 INSERT OR REPLACE INTO segments
-                (id, session_id, position, role, preview, content, name, tool_call_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (id, session_id, position, role, preview, content, name, tool_call_id, created_at_unix, verified_at_unix, source)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
-                (seg_id, session_id, position, role, preview, content, name, tool_call_id),
+                (
+                    seg_id,
+                    session_id,
+                    position,
+                    role,
+                    preview,
+                    content,
+                    name,
+                    tool_call_id,
+                    created_at,
+                    verified_at,
+                    source,
+                ),
             )
             self._conn.commit()
         except sqlite3.Error as exc:
             raise StoreError(
                 ErrorEnvelope(
-                    code="E_STORE",
+                    code=ErrorCode.STORE,
                     message=f"Failed to save segment: {exc}",
                     component="sqlite_store",
                     retryable=True,
+                    boundary="storage",
                 )
             ) from exc
         return Segment(
@@ -91,6 +123,9 @@ class SQLiteSegmentStore:
             content=content,
             name=name,
             tool_call_id=tool_call_id,
+            created_at_unix=created_at,
+            verified_at_unix=verified_at,
+            source=source,
         )
 
     def get(self, segment_id: str) -> Segment | None:
@@ -101,10 +136,11 @@ class SQLiteSegmentStore:
         except sqlite3.Error as exc:
             raise StoreError(
                 ErrorEnvelope(
-                    code="E_STORE",
+                    code=ErrorCode.STORE,
                     message=f"Failed to fetch segment: {exc}",
                     component="sqlite_store",
                     retryable=True,
+                    boundary="storage",
                 )
             ) from exc
         if row is None:
@@ -120,10 +156,11 @@ class SQLiteSegmentStore:
         except sqlite3.Error as exc:
             raise StoreError(
                 ErrorEnvelope(
-                    code="E_STORE",
+                    code=ErrorCode.STORE,
                     message=f"Failed to list segments: {exc}",
                     component="sqlite_store",
                     retryable=True,
+                    boundary="storage",
                 )
             ) from exc
         return [self._row_to_segment(r) for r in rows]
@@ -142,4 +179,7 @@ class SQLiteSegmentStore:
             content=row["content"],
             name=row["name"],
             tool_call_id=row["tool_call_id"],
+            created_at_unix=float(row["created_at_unix"] or 0.0),
+            verified_at_unix=float(row["verified_at_unix"] or 0.0),
+            source=str(row["source"] or "session"),
         )

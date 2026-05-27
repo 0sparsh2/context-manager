@@ -1,14 +1,31 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
+
+
+class ErrorCode(str, Enum):
+    STORE = "E_STORE"
+    MEMORY = "E_MEMORY"
+    MEMORY_VERIFY = "E_MEMORY_VERIFY"
+    LLM_TIMEOUT = "E_LLM_TIMEOUT"
+    LLM_AUTH = "E_LLM_AUTH"
+    LLM_PROVIDER = "E_LLM_PROVIDER"
+    CONFIG = "E_CONFIG"
 
 
 @dataclass
 class ErrorEnvelope:
-    code: str
+    code: str | ErrorCode
     message: str
     component: str
     retryable: bool
+    boundary: str = "internal"
+
+    def normalized_code(self) -> str:
+        if isinstance(self.code, ErrorCode):
+            return self.code.value
+        return self.code
 
 
 class ContextManagerError(Exception):
@@ -30,5 +47,13 @@ class LLMAuthError(ContextManagerError):
 
 
 class LLMProviderError(ContextManagerError):
+    pass
+
+
+class MemoryBackendError(ContextManagerError):
+    pass
+
+
+class MemoryVerificationError(ContextManagerError):
     pass
 

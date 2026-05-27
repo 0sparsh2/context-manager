@@ -135,7 +135,7 @@ def test_openai_adapter_maps_timeout_error(mock_openai_cls):
     adapter = OpenAIChatAdapter(LLMConfig(provider="nim", api_key="x"))
     with pytest.raises(LLMTimeoutError) as exc:
         adapter.complete([Message("user", "hello")], "hello")
-    assert exc.value.envelope.code == "E_LLM_TIMEOUT"
+    assert exc.value.envelope.normalized_code() == "E_LLM_TIMEOUT"
 
 
 @patch("openai.OpenAI")
@@ -150,7 +150,7 @@ def test_openai_adapter_maps_auth_error(mock_openai_cls):
     adapter = OpenAIChatAdapter(LLMConfig(provider="openai", api_key="x"))
     with pytest.raises(LLMAuthError) as exc:
         adapter.complete([Message("user", "hello")], "hello")
-    assert exc.value.envelope.code == "E_LLM_AUTH"
+    assert exc.value.envelope.normalized_code() == "E_LLM_AUTH"
 
 
 def test_llm_label():

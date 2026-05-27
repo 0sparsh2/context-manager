@@ -310,6 +310,24 @@ context-manager eval-all fixtures
 | `context-manager demo -i` | Interactive REPL |
 | `context-manager eval <fixture.json>` | Single long-session eval |
 | `context-manager inspect <fixture.json>` | Hot vs full stats |
+| `context-manager diag <fixture.json>` | Recall verification + compaction trace diagnostics |
+
+### New env toggles (urgent protocol)
+
+- `CONTEXT_MANAGER_MEMORY_BACKEND` = `none` (default) or `mem0` (pilot, graceful fallback)
+- `CONTEXT_MANAGER_MEM0_NAMESPACE` = namespace when Mem0 pilot is enabled
+- `CONTEXT_MANAGER_RECALL_REQUIRE_VERIFIED` = optional stricter recall gate
+- `CONTEXT_MANAGER_RECALL_MAX_AGE_SECONDS` = freshness gate for archived recall
+
+### Benchmark gate (quality/latency/cost)
+
+```bash
+python scripts/benchmark_ci_gate.py \
+  --fixtures fixtures \
+  --min-quality 95 \
+  --max-latency-ms 75 \
+  --max-cost-usd 0.01
+```
 
 ### Deep NIM integration test
 

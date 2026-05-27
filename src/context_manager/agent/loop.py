@@ -48,8 +48,13 @@ class MinimalAgentLoop:
         system_prompt: str | None = None,
         config: ContextConfig | None = None,
     ) -> None:
-        self.session = session or ContextSession.create(config=config)
         self.llm_config = llm_config or LLMConfig(provider="mock")
+        if session is None:
+            effective_config = config or ContextConfig()
+            effective_config.provider_name = self.llm_config.provider
+            self.session = ContextSession.create(config=effective_config)
+        else:
+            self.session = session
         self.llm = llm or create_llm(self.llm_config)
         if system_prompt and not self.session.messages:
             self.session.append(Message("system", system_prompt))

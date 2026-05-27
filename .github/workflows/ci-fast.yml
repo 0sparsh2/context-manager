@@ -21,4 +21,18 @@ jobs:
         run: pytest -q
       - name: Run fixture evals
         run: context-manager eval-all fixtures
+      - name: Benchmark budget gates
+        run: |
+          python scripts/benchmark_ci_gate.py \
+            --fixtures fixtures \
+            --min-quality 95 \
+            --max-latency-ms 75 \
+            --max-cost-usd 0.01 \
+            --json-out benchmark-report.json
+      - name: Upload benchmark report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-report
+          path: benchmark-report.json
 

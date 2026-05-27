@@ -54,6 +54,9 @@ class Segment:
     content: str
     name: str | None = None
     tool_call_id: str | None = None
+    created_at_unix: float = 0.0
+    verified_at_unix: float = 0.0
+    source: str = "session"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -65,4 +68,7 @@ class Segment:
             "content": self.content,
             "name": self.name,
             "tool_call_id": self.tool_call_id,
+            "created_at_unix": self.created_at_unix,
+            "verified_at_unix": self.verified_at_unix,
+            "source": self.source,
         }
