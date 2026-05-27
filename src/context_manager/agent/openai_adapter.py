@@ -15,6 +15,11 @@ from context_manager.agent.tools_schema import TOOL_SCHEMAS
 from context_manager.agent.types import LLMCompletion, ToolCall
 from context_manager.models import Message
 
+try:
+    from openai import OpenAI as _OpenAI
+except ImportError:  # pragma: no cover - exercised via adapter/tests without llm extra
+    _OpenAI = None
+
 
 class LLMClient(Protocol):
     def complete(self, hot_messages: list[Message], user_text: str) -> LLMCompletion: ...
@@ -56,25 +61,22 @@ class OpenAIChatAdapter:
     def _get_client(self):
         if self._client is not None:
             return self._client
-        try:
-            from openai import OpenAI
-        except ImportError as e:
-            raise ImportError(
-                "Install the OpenAI SDK: pip install 'context-manager[llm]' or pip install openai"
-            ) from e
-
         api_key = self.config.resolved_api_key()
         if not api_key:
             raise ValueError(
                 f"Missing API key for provider={self.config.provider!r}. "
                 "Set NVIDIA_API_KEY (nim) or OPENAI_API_KEY (openai)."
             )
+        if _OpenAI is None:
+            raise ImportError(
+                "Install the OpenAI SDK: pip install 'context-manager[llm]' or pip install openai"
+            )
 
         kwargs: dict[str, Any] = {"api_key": api_key}
         base_url = self.config.resolved_base_url()
         if base_url:
             kwargs["base_url"] = base_url
-        self._client = OpenAI(**kwargs)
+        self._client = _OpenAI(**kwargs)
         return self._client
 
     def complete(self, hot_messages: list[Message], user_text: str) -> LLMCompletion:

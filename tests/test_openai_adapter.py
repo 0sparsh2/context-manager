@@ -65,7 +65,7 @@ def test_create_llm_mock():
     assert isinstance(llm, MockLLM)
 
 
-@patch("openai.OpenAI")
+@patch("context_manager.agent.openai_adapter._OpenAI")
 def test_openai_adapter_parses_tool_calls(mock_openai_cls):
     mock_client = MagicMock()
     mock_openai_cls.return_value = mock_client
@@ -123,7 +123,7 @@ def test_openai_adapter_requires_api_key():
             adapter.complete([], "hi")
 
 
-@patch("openai.OpenAI")
+@patch("context_manager.agent.openai_adapter._OpenAI")
 def test_openai_adapter_maps_timeout_error(mock_openai_cls):
     mock_client = MagicMock()
     mock_openai_cls.return_value = mock_client
@@ -138,7 +138,7 @@ def test_openai_adapter_maps_timeout_error(mock_openai_cls):
     assert exc.value.envelope.normalized_code() == "E_LLM_TIMEOUT"
 
 
-@patch("openai.OpenAI")
+@patch("context_manager.agent.openai_adapter._OpenAI")
 def test_openai_adapter_maps_auth_error(mock_openai_cls):
     mock_client = MagicMock()
     mock_openai_cls.return_value = mock_client
