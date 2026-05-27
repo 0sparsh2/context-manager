@@ -3,6 +3,12 @@ from __future__ import annotations
 import json
 from typing import Any, Protocol
 
+from context_manager.errors import (
+    ErrorEnvelope,
+    LLMAuthError,
+    LLMProviderError,
+    LLMTimeoutError,
+)
 from context_manager.agent.llm_config import LLMConfig
 from context_manager.agent.tools_schema import TOOL_SCHEMAS
 from context_manager.agent.types import LLMCompletion, ToolCall
@@ -74,15 +80,44 @@ class OpenAIChatAdapter:
         client = self._get_client()
         api_messages = messages_to_openai(hot_messages)
 
-        response = client.chat.completions.create(
-            model=self.config.resolved_model(),
-            messages=api_messages,
-            tools=TOOL_SCHEMAS,
-            tool_choice="auto",
-            temperature=self.config.temperature,
-            max_tokens=self.config.max_tokens,
-            timeout=self.config.timeout_seconds,
-        )
+        try:
+            response = client.chat.completions.create(
+                model=self.config.resolved_model(),
+                messages=api_messages,
+                tools=TOOL_SCHEMAS,
+                tool_choice="auto",
+                temperature=self.config.temperature,
+                max_tokens=self.config.max_tokens,
+                timeout=self.config.timeout_seconds,
+            )
+        except Exception as exc:
+            name = exc.__class__.__name__
+            if name in {"APITimeoutError", "ReadTimeout"}:
+                raise LLMTimeoutError(
+                    ErrorEnvelope(
+                        code="E_LLM_TIMEOUT",
+                        message=f"LLM request timed out for provider={self.config.provider}",
+                        component="openai_adapter",
+                        retryable=True,
+                    )
+                ) from exc
+            if name in {"AuthenticationError", "PermissionDeniedError"}:
+                raise LLMAuthError(
+                    ErrorEnvelope(
+                        code="E_LLM_AUTH",
+                        message="LLM authentication failed. Check API key and permissions.",
+                        component="openai_adapter",
+                        retryable=False,
+                    )
+                ) from exc
+            raise LLMProviderError(
+                ErrorEnvelope(
+                    code="E_LLM_PROVIDER",
+                    message=f"LLM provider request failed: {name}",
+                    component="openai_adapter",
+                    retryable=False,
+                )
+            ) from exc
 
         choice = response.choices[0]
         msg = choice.message

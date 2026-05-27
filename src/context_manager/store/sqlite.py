@@ -4,6 +4,7 @@ import sqlite3
 import uuid
 from pathlib import Path
 
+from context_manager.errors import ErrorEnvelope, StoreError
 from context_manager.models import Segment
 
 
@@ -17,24 +18,34 @@ class SQLiteSegmentStore:
         self._init_schema()
 
     def _init_schema(self) -> None:
-        self._conn.execute(
-            """
-            CREATE TABLE IF NOT EXISTS segments (
-                id TEXT PRIMARY KEY,
-                session_id TEXT NOT NULL,
-                position INTEGER NOT NULL,
-                role TEXT NOT NULL,
-                preview TEXT NOT NULL,
-                content TEXT NOT NULL,
-                name TEXT,
-                tool_call_id TEXT
+        try:
+            self._conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS segments (
+                    id TEXT PRIMARY KEY,
+                    session_id TEXT NOT NULL,
+                    position INTEGER NOT NULL,
+                    role TEXT NOT NULL,
+                    preview TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    name TEXT,
+                    tool_call_id TEXT
+                )
+                """
             )
-            """
-        )
-        self._conn.execute(
-            "CREATE INDEX IF NOT EXISTS idx_segments_session ON segments(session_id)"
-        )
-        self._conn.commit()
+            self._conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_segments_session ON segments(session_id)"
+            )
+            self._conn.commit()
+        except sqlite3.Error as exc:
+            raise StoreError(
+                ErrorEnvelope(
+                    code="E_STORE",
+                    message=f"Failed to initialize segment store: {exc}",
+                    component="sqlite_store",
+                    retryable=False,
+                )
+            ) from exc
 
     def save(
         self,
@@ -52,15 +63,25 @@ class SQLiteSegmentStore:
         preview = content[:preview_chars]
         if len(content) > preview_chars:
             preview += "…"
-        self._conn.execute(
-            """
-            INSERT OR REPLACE INTO segments
-            (id, session_id, position, role, preview, content, name, tool_call_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (seg_id, session_id, position, role, preview, content, name, tool_call_id),
-        )
-        self._conn.commit()
+        try:
+            self._conn.execute(
+                """
+                INSERT OR REPLACE INTO segments
+                (id, session_id, position, role, preview, content, name, tool_call_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (seg_id, session_id, position, role, preview, content, name, tool_call_id),
+            )
+            self._conn.commit()
+        except sqlite3.Error as exc:
+            raise StoreError(
+                ErrorEnvelope(
+                    code="E_STORE",
+                    message=f"Failed to save segment: {exc}",
+                    component="sqlite_store",
+                    retryable=True,
+                )
+            ) from exc
         return Segment(
             id=seg_id,
             session_id=session_id,
@@ -73,18 +94,38 @@ class SQLiteSegmentStore:
         )
 
     def get(self, segment_id: str) -> Segment | None:
-        row = self._conn.execute(
-            "SELECT * FROM segments WHERE id = ?", (segment_id,)
-        ).fetchone()
+        try:
+            row = self._conn.execute(
+                "SELECT * FROM segments WHERE id = ?", (segment_id,)
+            ).fetchone()
+        except sqlite3.Error as exc:
+            raise StoreError(
+                ErrorEnvelope(
+                    code="E_STORE",
+                    message=f"Failed to fetch segment: {exc}",
+                    component="sqlite_store",
+                    retryable=True,
+                )
+            ) from exc
         if row is None:
             return None
         return self._row_to_segment(row)
 
     def list_session(self, session_id: str) -> list[Segment]:
-        rows = self._conn.execute(
-            "SELECT * FROM segments WHERE session_id = ? ORDER BY position",
-            (session_id,),
-        ).fetchall()
+        try:
+            rows = self._conn.execute(
+                "SELECT * FROM segments WHERE session_id = ? ORDER BY position",
+                (session_id,),
+            ).fetchall()
+        except sqlite3.Error as exc:
+            raise StoreError(
+                ErrorEnvelope(
+                    code="E_STORE",
+                    message=f"Failed to list segments: {exc}",
+                    component="sqlite_store",
+                    retryable=True,
+                )
+            ) from exc
         return [self._row_to_segment(r) for r in rows]
 
     def close(self) -> None:

@@ -6,6 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from context_manager.errors import LLMAuthError, LLMTimeoutError
 from context_manager.agent.llm_config import LLMConfig, NIM_DEFAULT_BASE_URL, NIM_DEFAULT_MODEL
 from context_manager.agent.llm_factory import create_llm, llm_label
 from context_manager.agent.openai_adapter import OpenAIChatAdapter, messages_to_openai
@@ -120,6 +121,36 @@ def test_openai_adapter_requires_api_key():
     with patch.dict("os.environ", {}, clear=True):
         with pytest.raises(ValueError, match="Missing API key"):
             adapter.complete([], "hi")
+
+
+@patch("openai.OpenAI")
+def test_openai_adapter_maps_timeout_error(mock_openai_cls):
+    mock_client = MagicMock()
+    mock_openai_cls.return_value = mock_client
+
+    class APITimeoutError(Exception):
+        pass
+
+    mock_client.chat.completions.create.side_effect = APITimeoutError("timeout")
+    adapter = OpenAIChatAdapter(LLMConfig(provider="nim", api_key="x"))
+    with pytest.raises(LLMTimeoutError) as exc:
+        adapter.complete([Message("user", "hello")], "hello")
+    assert exc.value.envelope.code == "E_LLM_TIMEOUT"
+
+
+@patch("openai.OpenAI")
+def test_openai_adapter_maps_auth_error(mock_openai_cls):
+    mock_client = MagicMock()
+    mock_openai_cls.return_value = mock_client
+
+    class AuthenticationError(Exception):
+        pass
+
+    mock_client.chat.completions.create.side_effect = AuthenticationError("bad key")
+    adapter = OpenAIChatAdapter(LLMConfig(provider="openai", api_key="x"))
+    with pytest.raises(LLMAuthError) as exc:
+        adapter.complete([Message("user", "hello")], "hello")
+    assert exc.value.envelope.code == "E_LLM_AUTH"
 
 
 def test_llm_label():

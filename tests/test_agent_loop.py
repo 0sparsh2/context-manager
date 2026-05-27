@@ -41,3 +41,18 @@ def test_trace_id_survives_in_hot_after_many_turns():
         assert "checkout-failure-2026-03-15" in hot_text
     finally:
         agent.close()
+
+
+def test_recall_by_keyword_respects_scan_limit():
+    cfg = ContextConfig(recall_scan_limit=1)
+    agent = MinimalAgentLoop(system_prompt="sys", config=cfg)
+    try:
+        agent.run_turn("search trace_id=incident-42")
+        # Force more archived content and move original marker out of newest segment.
+        for i in range(6):
+            agent.run_turn(f"filler {i}")
+        r = agent.run_turn("What was TAIL_MARKER_ZZZ from the first search?")
+        # With tight scan limit, recall is expected not to happen.
+        assert r.recall_happened is False
+    finally:
+        agent.close()

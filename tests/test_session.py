@@ -38,3 +38,33 @@ def test_recall_archived_segment():
         assert session.recall(seg.id) == "ARCHIVE_ME_MIDDLE"
     finally:
         session.close()
+
+
+def test_metrics_hook_emits_trim_and_recall():
+    events: list[tuple[str, dict]] = []
+
+    def hook(name: str, fields: dict) -> None:
+        events.append((name, fields))
+
+    session = ContextSession.create(
+        config=ContextConfig(
+            trim_mode=TrimMode.HEAD_TAIL,
+            head_messages=1,
+            tail_messages=1,
+            metrics_hook=hook,
+        )
+    )
+    try:
+        session.append(Message("system", "sys"))
+        session.append(Message("user", "A"))
+        session.append(Message("user", "B"))
+        session.append(Message("assistant", "C"))
+        session.get_hot_context()
+        segs = session.list_archived_segments()
+        if segs:
+            session.recall(segs[0].id)
+        names = [n for n, _ in events]
+        assert "context.trim_applied" in names
+        assert "context.recall_attempt" in names
+    finally:
+        session.close()

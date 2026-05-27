@@ -9,6 +9,7 @@ from context_manager.agent.llm_config import LLMConfig
 from context_manager.agent.llm_factory import create_llm, llm_label
 from context_manager.agent.openai_adapter import LLMClient
 from context_manager.agent.types import LLMCompletion, ToolCall
+from context_manager.errors import LLMTimeoutError
 from context_manager.models import Message
 from context_manager.session import ContextConfig, ContextSession
 
@@ -71,7 +72,11 @@ class MinimalAgentLoop:
 
         for _ in range(max_rounds):
             hot = self.session.get_hot_context()
-            response = self.llm.complete(hot, user_text)
+            try:
+                response = self.llm.complete(hot, user_text)
+            except LLMTimeoutError:
+                self.session._emit_metric("llm.error", code="E_LLM_TIMEOUT", retryable=True)
+                raise
             llm_rounds += 1
 
             if response.usage_prompt_tokens is not None:
@@ -178,10 +183,28 @@ class MinimalAgentLoop:
 
         if call.name == "recall_by_keyword":
             keyword = call.arguments.get("keyword", "")
-            for seg in self.session.list_archived_segments():
+            segs = self.session.list_archived_segments()
+            scan_cap = max(1, self.session.config.recall_scan_limit)
+            scanned = 0
+            for seg in reversed(segs):
+                if scanned >= scan_cap:
+                    break
+                scanned += 1
                 if keyword.lower() in seg.content.lower():
                     notes.append(f"found keyword in segment {seg.id}")
+                    self.session._emit_metric(
+                        "context.recall_scan",
+                        scanned_segments=scanned,
+                        found=True,
+                        capped=len(segs) > scan_cap,
+                    )
                     return seg.content, True
+            self.session._emit_metric(
+                "context.recall_scan",
+                scanned_segments=scanned,
+                found=False,
+                capped=len(segs) > scan_cap,
+            )
             return f"ERROR: keyword {keyword!r} not found in archive", False
 
         if call.name == "search_spans":

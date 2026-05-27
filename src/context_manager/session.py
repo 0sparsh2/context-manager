@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import time
 import uuid
 from dataclasses import dataclass, field
+from typing import Any, Callable
 
 from context_manager.models import Message, TrimMode
 from context_manager.policies.tools import ToolResultPolicy
@@ -18,6 +20,8 @@ class ContextConfig:
     preview_chars: int = 80
     tool_policy_enabled: bool = True
     db_path: str | None = None
+    recall_scan_limit: int = 5000
+    metrics_hook: Callable[[str, dict[str, Any]], None] | None = None
 
 
 @dataclass
@@ -60,8 +64,19 @@ class ContextSession:
     def hot_char_count(self) -> int:
         return sum(m.char_count() for m in self.get_hot_context())
 
+    def _emit_metric(self, name: str, **fields: Any) -> None:
+        hook = self.config.metrics_hook
+        if hook is None:
+            return
+        try:
+            hook(name, fields)
+        except Exception:
+            # Metrics must never break core behavior.
+            return
+
     def get_hot_context(self) -> list[Message]:
         """Apply tool policy then trim policy; system messages preserved."""
+        full_chars = self.total_chars()
         msgs = [Message(**{**m.to_dict(), "metadata": dict(m.metadata)}) for m in self.messages]
         if self.config.tool_policy_enabled:
             tool_policy = ToolResultPolicy(enabled=True)
@@ -81,7 +96,7 @@ class ContextSession:
                 tail_messages=self.config.tail_messages,
             )
 
-        return apply_trim(
+        hot = apply_trim(
             policy,
             msgs,
             session_id=self.session_id,
@@ -89,10 +104,25 @@ class ContextSession:
             save_segment=self.store.save,
             preview_chars=self.config.preview_chars,
         )
+        self._emit_metric(
+            "context.trim_applied",
+            hot_chars=sum(m.char_count() for m in hot),
+            full_chars=full_chars,
+            archive_count=len(self.list_archived_segments()),
+        )
+        return hot
 
     def recall(self, segment_id: str) -> str | None:
+        started = time.perf_counter()
         seg = self.store.get(segment_id)
-        return seg.content if seg else None
+        hit = seg is not None
+        self._emit_metric(
+            "context.recall_attempt",
+            segment_id=segment_id,
+            hit=hit,
+            recall_latency_ms=(time.perf_counter() - started) * 1000.0,
+        )
+        return seg.content if hit else None
 
     def list_archived_segments(self) -> list:
         return self.store.list_session(self.session_id)
