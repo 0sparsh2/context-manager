@@ -99,7 +99,29 @@ def test_compaction_diagnostics_exposes_strategy():
         for i in range(8):
             session.append(Message("user", f"msg:{i}"))
         trace = session.compaction_diagnostics()
-        assert trace["strategy"] == "capability_aware_v1"
+        assert trace["strategy"] == "capability_aware_v2"
         assert trace["provider"] == "nim"
+        assert "confidence" in trace
+        assert "preferred_trim_mode" in trace["provider_caps"]
+    finally:
+        session.close()
+
+
+def test_recall_diagnostics_includes_policy_and_metadata():
+    session = ContextSession.create(
+        config=ContextConfig(trim_mode=TrimMode.HEAD_TAIL, head_messages=1, tail_messages=1)
+    )
+    try:
+        session.append(Message("system", "sys"))
+        session.append(Message("user", "head"))
+        session.append(Message("user", "middle"))
+        session.append(Message("assistant", "tail"))
+        session.get_hot_context()
+        seg = session.list_archived_segments()[0]
+        diag = session.recall_diagnostics(seg.id)
+        assert diag["hit"] is True
+        assert "policy" in diag
+        assert "segment_metadata" in diag
+        assert isinstance(diag["reason_codes"], list)
     finally:
         session.close()

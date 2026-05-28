@@ -114,11 +114,22 @@ def cmd_diag(args: argparse.Namespace) -> int:
         for turn in case.turns:
             for raw in turn:
                 session.append(Message.from_dict(raw))
+        compaction = session.compaction_diagnostics()
+        recalls = [session.recall_diagnostics(seg.id) for seg in session.list_archived_segments()[: args.limit]]
+        if args.json:
+            payload = {
+                "compaction_trace": compaction,
+                "recall_traces": recalls,
+            }
+            print(json.dumps(payload, indent=2 if not args.compact else None))
+            return 0
+
         print("compaction_trace:")
-        print(json.dumps(session.compaction_diagnostics(), indent=2))
-        for seg in session.list_archived_segments()[: args.limit]:
-            print(f"\nrecall_trace segment={seg.id}")
-            print(json.dumps(session.recall_diagnostics(seg.id), indent=2))
+        print(json.dumps(compaction, indent=2))
+        for rec in recalls:
+            seg_id = rec.get("segment_id", "?")
+            print(f"\nrecall_trace segment={seg_id}")
+            print(json.dumps(rec, indent=2))
     finally:
         session.close()
     return 0
@@ -174,6 +185,8 @@ def main(argv: list[str] | None = None) -> int:
     p_diag = sub.add_parser("diag", help="Print recall + compaction diagnostics for a fixture")
     p_diag.add_argument("fixture", type=str)
     p_diag.add_argument("--limit", type=int, default=3, help="Max archived segments to inspect")
+    p_diag.add_argument("--json", action="store_true", help="Emit combined diagnostics as JSON")
+    p_diag.add_argument("--compact", action="store_true", help="Use compact JSON (single-line) with --json")
     p_diag.set_defaults(func=cmd_diag)
 
     args = parser.parse_args(argv)

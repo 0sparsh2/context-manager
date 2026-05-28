@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 
 class ErrorCode(str, Enum):
@@ -14,18 +15,40 @@ class ErrorCode(str, Enum):
     CONFIG = "E_CONFIG"
 
 
+class ErrorBoundary(str, Enum):
+    INTERNAL = "internal"
+    PROVIDER_ADAPTER = "provider_adapter"
+    STORAGE = "storage"
+    MEMORY_BACKEND = "memory_backend"
+    CLI = "cli"
+
+
 @dataclass
 class ErrorEnvelope:
     code: str | ErrorCode
     message: str
     component: str
     retryable: bool
-    boundary: str = "internal"
+    boundary: str | ErrorBoundary = ErrorBoundary.INTERNAL
 
     def normalized_code(self) -> str:
         if isinstance(self.code, ErrorCode):
             return self.code.value
         return self.code
+
+    def normalized_boundary(self) -> str:
+        if isinstance(self.boundary, ErrorBoundary):
+            return self.boundary.value
+        return self.boundary
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "code": self.normalized_code(),
+            "message": self.message,
+            "component": self.component,
+            "retryable": self.retryable,
+            "boundary": self.normalized_boundary(),
+        }
 
 
 class ContextManagerError(Exception):

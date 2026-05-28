@@ -204,26 +204,50 @@ class ContextSession:
         started = time.perf_counter()
         seg = self.store.get(segment_id)
         if seg is None:
-            return {"segment_id": segment_id, "hit": False, "allowed": False}
+            return {
+                "segment_id": segment_id,
+                "hit": False,
+                "allowed": False,
+                "reason": "not_found",
+                "policy": {
+                    "require_verified": self.config.recall_require_verified,
+                    "max_age_seconds": self.config.recall_max_age_seconds,
+                },
+            }
         now = time.time()
         age_seconds = max(0, int(now - seg.created_at_unix))
         verified = bool(seg.verified_at_unix and seg.verified_at_unix > 0)
         is_fresh = age_seconds <= self.config.recall_max_age_seconds
         allowed = True
         reason = "ok"
+        reason_codes: list[str] = []
         if self.config.recall_require_verified and not verified:
             allowed = False
             reason = "unverified"
+            reason_codes.append("E_MEMORY_VERIFY")
         elif not is_fresh:
             allowed = False
             reason = "stale"
+            reason_codes.append("E_MEMORY_VERIFY")
+        if allowed:
+            reason_codes.append("OK")
         return {
             "segment_id": segment_id,
             "hit": True,
             "allowed": allowed,
             "reason": reason,
+            "reason_codes": reason_codes,
             "age_seconds": age_seconds,
             "verified": verified,
+            "segment_metadata": {
+                "created_at_unix": seg.created_at_unix,
+                "verified_at_unix": seg.verified_at_unix,
+                "source": seg.source,
+            },
+            "policy": {
+                "require_verified": self.config.recall_require_verified,
+                "max_age_seconds": self.config.recall_max_age_seconds,
+            },
             "latency_ms": (time.perf_counter() - started) * 1000.0,
         }
 

@@ -151,6 +151,7 @@ def test_openai_adapter_maps_auth_error(mock_openai_cls):
     with pytest.raises(LLMAuthError) as exc:
         adapter.complete([Message("user", "hello")], "hello")
     assert exc.value.envelope.normalized_code() == "E_LLM_AUTH"
+    assert exc.value.envelope.normalized_boundary() == "provider_adapter"
 
 
 def test_llm_label():
