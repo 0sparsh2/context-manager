@@ -72,6 +72,8 @@ class EvalResult:
     assertion_results: list[AssertionResult] = field(default_factory=list)
     quality_score: float = 0.0
     avg_turn_latency_ms: float = 0.0
+    p95_turn_latency_ms: float = 0.0
+    turn_latencies_ms: list[float] = field(default_factory=list)
     estimated_prompt_tokens: int = 0
     estimated_completion_tokens: int = 0
     estimated_cost_usd: float = 0.0
@@ -80,6 +82,7 @@ class EvalResult:
         lines = [
             f"Case: {self.case_name} — {'PASS' if self.passed else 'FAIL'} "
             f"(quality={self.quality_score:.1f} latency={self.avg_turn_latency_ms:.1f}ms "
+            f"p95={self.p95_turn_latency_ms:.1f}ms "
             f"cost=${self.estimated_cost_usd:.6f})"
         ]
         for ar in self.assertion_results:
@@ -144,12 +147,17 @@ class LongSessionEvaluator:
             estimated_cost_usd = (
                 estimated_prompt_tokens * 0.0000002 + estimated_completion_tokens * 0.0000006
             )
+            sorted_latencies = sorted(turn_latencies_ms)
+            p95_idx = int(round(0.95 * (len(sorted_latencies) - 1))) if sorted_latencies else 0
+            p95_latency = sorted_latencies[p95_idx] if sorted_latencies else 0.0
             return EvalResult(
                 case_name=self.case.name,
                 passed=passed,
                 assertion_results=results,
                 quality_score=quality_score,
                 avg_turn_latency_ms=statistics.mean(turn_latencies_ms) if turn_latencies_ms else 0.0,
+                p95_turn_latency_ms=p95_latency,
+                turn_latencies_ms=turn_latencies_ms,
                 estimated_prompt_tokens=estimated_prompt_tokens,
                 estimated_completion_tokens=estimated_completion_tokens,
                 estimated_cost_usd=estimated_cost_usd,

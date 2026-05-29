@@ -3,12 +3,15 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from dataclasses import asdict
 from pathlib import Path
 
 from context_manager.agent.llm_config import LLMConfig, Provider, load_dotenv_if_present
 from context_manager.agent.loop import run_interactive, run_scripted_demo
 from context_manager.eval.harness import EvalCase, LongSessionEvaluator
+from context_manager.memory.backends import memory_backend_status
 from context_manager.models import Message, TrimMode
+from context_manager.policies.compaction import capabilities_for_provider
 from context_manager.session import ContextConfig, ContextSession
 
 
@@ -118,6 +121,10 @@ def cmd_diag(args: argparse.Namespace) -> int:
         recalls = [session.recall_diagnostics(seg.id) for seg in session.list_archived_segments()[: args.limit]]
         if args.json:
             payload = {
+                "memory_backend": memory_backend_status(),
+                "compaction_capabilities": asdict(
+                    capabilities_for_provider(str(case.config.get("provider_name", "mock")))
+                ),
                 "compaction_trace": compaction,
                 "recall_traces": recalls,
             }
@@ -132,6 +139,24 @@ def cmd_diag(args: argparse.Namespace) -> int:
             print(json.dumps(rec, indent=2))
     finally:
         session.close()
+    return 0
+
+
+def cmd_capabilities(args: argparse.Namespace) -> int:
+    payload = {
+        "memory_backend": memory_backend_status(),
+        "compaction_providers": {
+            name: asdict(capabilities_for_provider(name))
+            for name in ("mock", "openai", "nim", "anthropic")
+        },
+    }
+    if args.json:
+        print(json.dumps(payload, indent=2 if not args.compact else None))
+    else:
+        print("memory_backend:")
+        print(json.dumps(payload["memory_backend"], indent=2))
+        print("\ncompaction_providers:")
+        print(json.dumps(payload["compaction_providers"], indent=2))
     return 0
 
 
@@ -188,6 +213,11 @@ def main(argv: list[str] | None = None) -> int:
     p_diag.add_argument("--json", action="store_true", help="Emit combined diagnostics as JSON")
     p_diag.add_argument("--compact", action="store_true", help="Use compact JSON (single-line) with --json")
     p_diag.set_defaults(func=cmd_diag)
+
+    p_cap = sub.add_parser("capabilities", help="Show memory backend and compaction capability status")
+    p_cap.add_argument("--json", action="store_true")
+    p_cap.add_argument("--compact", action="store_true")
+    p_cap.set_defaults(func=cmd_capabilities)
 
     args = parser.parse_args(argv)
     return args.func(args)

@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import time
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Any, Protocol
 
 from context_manager.errors import ErrorCode, ErrorEnvelope, MemoryBackendError
 
@@ -14,6 +14,7 @@ class MemoryFact:
     value: str
     confidence: float = 1.0
     source: str = "session"
+    session_id: str = ""
     created_at_unix: float = 0.0
     updated_at_unix: float = 0.0
     verified_at_unix: float = 0.0
@@ -40,6 +41,49 @@ class NoneMemoryBackend:
 
     def enabled(self) -> bool:
         return False
+
+
+_INMEMORY_SINGLETON: InMemoryMemoryBackend | None = None
+
+
+class InMemoryMemoryBackend:
+    """Deterministic in-process backend for tests and local cross-session recall."""
+
+    def __init__(self) -> None:
+        self._facts: dict[str, MemoryFact] = {}
+
+    def enabled(self) -> bool:
+        return True
+
+    def write_fact(
+        self,
+        *,
+        session_id: str,
+        key: str,
+        value: str,
+        source: str = "session",
+    ) -> None:
+        now = time.time()
+        self._facts[key] = MemoryFact(
+            key=key,
+            value=value,
+            session_id=session_id,
+            source=source,
+            confidence=1.0,
+            created_at_unix=now,
+            updated_at_unix=now,
+            verified_at_unix=now,
+            verification_status="verified",
+        )
+
+    def read_fact(self, *, key: str) -> MemoryFact | None:
+        return self._facts.get(key)
+
+    def list_facts(self, *, session_id: str | None = None) -> list[MemoryFact]:
+        facts = list(self._facts.values())
+        if session_id is None:
+            return facts
+        return [f for f in facts if f.session_id == session_id]
 
 
 class Mem0PilotBackend:
@@ -134,9 +178,32 @@ def create_memory_backend() -> MemoryBackend:
     name = os.environ.get("CONTEXT_MANAGER_MEMORY_BACKEND", "none").strip().lower()
     if name in {"", "none", "off", "disabled"}:
         return NoneMemoryBackend()
+    if name == "inmemory":
+        global _INMEMORY_SINGLETON
+        if _INMEMORY_SINGLETON is None:
+            _INMEMORY_SINGLETON = InMemoryMemoryBackend()
+        return _INMEMORY_SINGLETON
     if name == "mem0":
         try:
             return Mem0PilotBackend()
         except MemoryBackendError:
             return NoneMemoryBackend()
     return NoneMemoryBackend()
+
+
+def memory_backend_status() -> dict[str, Any]:
+    """Report configured backend and availability for operator diagnostics."""
+    backend_name = os.environ.get("CONTEXT_MANAGER_MEMORY_BACKEND", "none").strip().lower()
+    backend = create_memory_backend()
+    status: dict[str, Any] = {
+        "configured": backend_name,
+        "enabled": backend.enabled(),
+        "implementation": type(backend).__name__,
+    }
+    if backend_name == "mem0":
+        status["mem0_api_key_present"] = bool(os.environ.get("MEM0_API_KEY"))
+        try:
+            status["mem0_sdk_available"] = Mem0PilotBackend().enabled()
+        except MemoryBackendError:
+            status["mem0_sdk_available"] = False
+    return status

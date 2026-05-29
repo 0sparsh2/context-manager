@@ -1,51 +1,142 @@
 {
+  "mode": "dynamic",
   "budgets": {
     "min_quality": 95.0,
-    "max_latency_ms": 75.0,
+    "max_latency_ms": 50.0,
     "max_cost_usd": 0.01
   },
   "results": [
     {
       "fixture": "naive_truncation_fails.json",
       "passed": true,
-      "quality_score": 100.0,
-      "avg_turn_latency_ms": 0.06296898936852813,
-      "estimated_cost_usd": 1.74e-05
+      "failures": [],
+      "budget": {
+        "min_quality": 95.0,
+        "max_avg_latency_ms": 82.0,
+        "max_p95_latency_ms": 205.0,
+        "max_cost_usd": 0.0052,
+        "turn_count": 4,
+        "assertion_count": 2
+      },
+      "metrics": {
+        "passed": true,
+        "quality_score": 100.0,
+        "avg_turn_latency_ms": 0.05513549876923207,
+        "p95_turn_latency_ms": 0.21225000091362745,
+        "estimated_cost_usd": 1.74e-05,
+        "estimated_prompt_tokens": 84,
+        "estimated_completion_tokens": 1
+      }
     },
     {
       "fixture": "realworld/arize_observability_turn11.json",
       "passed": true,
-      "quality_score": 100.0,
-      "avg_turn_latency_ms": 0.08244862636694542,
-      "estimated_cost_usd": 6.98e-05
+      "failures": [],
+      "budget": {
+        "min_quality": 95.0,
+        "max_avg_latency_ms": 154.0,
+        "max_p95_latency_ms": 385.0,
+        "max_cost_usd": 0.012400000000000001,
+        "turn_count": 13,
+        "assertion_count": 5
+      },
+      "metrics": {
+        "passed": true,
+        "quality_score": 100.0,
+        "avg_turn_latency_ms": 0.05419576952520471,
+        "p95_turn_latency_ms": 0.11295900185359642,
+        "estimated_cost_usd": 6.98e-05,
+        "estimated_prompt_tokens": 346,
+        "estimated_completion_tokens": 1
+      }
     },
     {
       "fixture": "realworld/cursor_coding_agent.json",
       "passed": true,
-      "quality_score": 100.0,
-      "avg_turn_latency_ms": 0.032271134841721505,
-      "estimated_cost_usd": 3.4e-05
+      "failures": [],
+      "budget": {
+        "min_quality": 95.0,
+        "max_avg_latency_ms": 114.0,
+        "max_p95_latency_ms": 285.0,
+        "max_cost_usd": 0.008400000000000001,
+        "turn_count": 8,
+        "assertion_count": 4
+      },
+      "metrics": {
+        "passed": true,
+        "quality_score": 100.0,
+        "avg_turn_latency_ms": 0.027213749490329064,
+        "p95_turn_latency_ms": 0.10695800301618874,
+        "estimated_cost_usd": 3.4e-05,
+        "estimated_prompt_tokens": 167,
+        "estimated_completion_tokens": 1
+      }
     },
     {
       "fixture": "realworld/openai_support_last_n.json",
       "passed": true,
-      "quality_score": 100.0,
-      "avg_turn_latency_ms": 0.016253499779850245,
-      "estimated_cost_usd": 1.74e-05
+      "failures": [],
+      "budget": {
+        "min_quality": 95.0,
+        "max_avg_latency_ms": 146.0,
+        "max_p95_latency_ms": 365.0,
+        "max_cost_usd": 0.011600000000000001,
+        "turn_count": 12,
+        "assertion_count": 3
+      },
+      "metrics": {
+        "passed": true,
+        "quality_score": 100.0,
+        "avg_turn_latency_ms": 0.01280550107670327,
+        "p95_turn_latency_ms": 0.001167005393654108,
+        "estimated_cost_usd": 1.74e-05,
+        "estimated_prompt_tokens": 84,
+        "estimated_completion_tokens": 1
+      }
     },
     {
       "fixture": "realworld/subagent_delegation.json",
       "passed": true,
-      "quality_score": 100.0,
-      "avg_turn_latency_ms": 0.020750149685357298,
-      "estimated_cost_usd": 2.22e-05
+      "failures": [],
+      "budget": {
+        "min_quality": 95.0,
+        "max_avg_latency_ms": 106.0,
+        "max_p95_latency_ms": 265.0,
+        "max_cost_usd": 0.0076,
+        "turn_count": 7,
+        "assertion_count": 4
+      },
+      "metrics": {
+        "passed": true,
+        "quality_score": 100.0,
+        "avg_turn_latency_ms": 0.03042271315020376,
+        "p95_turn_latency_ms": 0.1858749965322204,
+        "estimated_cost_usd": 2.22e-05,
+        "estimated_prompt_tokens": 108,
+        "estimated_completion_tokens": 1
+      }
     },
     {
       "fixture": "tool_spam_then_followup.json",
       "passed": true,
-      "quality_score": 100.0,
-      "avg_turn_latency_ms": 0.048184289231098125,
-      "estimated_cost_usd": 6.08e-05
+      "failures": [],
+      "budget": {
+        "min_quality": 95.0,
+        "max_avg_latency_ms": 162.0,
+        "max_p95_latency_ms": 405.0,
+        "max_cost_usd": 0.0132,
+        "turn_count": 14,
+        "assertion_count": 4
+      },
+      "metrics": {
+        "passed": true,
+        "quality_score": 100.0,
+        "avg_turn_latency_ms": 0.04502378526792329,
+        "p95_turn_latency_ms": 0.14033300249138847,
+        "estimated_cost_usd": 6.08e-05,
+        "estimated_prompt_tokens": 301,
+        "estimated_completion_tokens": 1
+      }
     }
   ]
 }

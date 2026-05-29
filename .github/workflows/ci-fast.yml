@@ -25,10 +25,10 @@ jobs:
         run: |
           python scripts/benchmark_ci_gate.py \
             --fixtures fixtures \
-            --min-quality 95 \
-            --max-latency-ms 75 \
-            --max-cost-usd 0.01 \
+            --dynamic-budgets \
             --json-out benchmark-report.json
+      - name: Memory backend smoke
+        run: python scripts/memory_smoke_test.py
       - name: Upload benchmark report
         if: always()
         uses: actions/upload-artifact@v4

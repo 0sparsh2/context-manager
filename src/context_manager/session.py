@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable
 
 from context_manager.memory.backends import MemoryBackend, create_memory_backend
+from context_manager.memory.verification import MemoryVerificationPolicy, verify_memory_fact
 from context_manager.models import Message, TrimMode
 from context_manager.policies.compaction import (
     CapabilityAwareCompactionStrategy,
@@ -31,6 +32,9 @@ class ContextConfig:
     recall_scan_limit: int = 5000
     recall_require_verified: bool = False
     recall_max_age_seconds: int = 60 * 60 * 24 * 14
+    memory_require_verified: bool = False
+    memory_max_age_seconds: int = 60 * 60 * 24 * 14
+    memory_min_confidence: float = 0.0
     metrics_hook: Callable[[str, dict[str, Any]], None] | None = None
 
 
@@ -199,6 +203,62 @@ class ContextSession:
             recall_latency_ms=(time.perf_counter() - started) * 1000.0,
         )
         return content
+
+    def recall_from_memory(self, key: str) -> str | None:
+        """Read a cross-session fact through verification/freshness gates."""
+        started = time.perf_counter()
+        fact = self.memory_backend.read_fact(key=key)
+        policy = MemoryVerificationPolicy(
+            require_verified=self.config.memory_require_verified,
+            max_age_seconds=self.config.memory_max_age_seconds,
+            min_confidence=self.config.memory_min_confidence,
+        )
+        decision = verify_memory_fact(fact, policy=policy)
+        self._emit_metric(
+            "context.memory_recall",
+            key=key,
+            hit=fact is not None,
+            allowed=decision.allowed,
+            reason=decision.reason,
+            reason_codes=decision.reason_codes,
+            confidence=decision.confidence,
+            age_seconds=decision.age_seconds,
+            memory_backend_enabled=self.memory_backend.enabled(),
+            memory_latency_ms=(time.perf_counter() - started) * 1000.0,
+        )
+        if not decision.allowed or fact is None:
+            return None
+        return fact.value
+
+    def memory_diagnostics(self, key: str) -> dict[str, Any]:
+        fact = self.memory_backend.read_fact(key=key)
+        policy = MemoryVerificationPolicy(
+            require_verified=self.config.memory_require_verified,
+            max_age_seconds=self.config.memory_max_age_seconds,
+            min_confidence=self.config.memory_min_confidence,
+        )
+        decision = verify_memory_fact(fact, policy=policy)
+        return {
+            "key": key,
+            "hit": fact is not None,
+            "allowed": decision.allowed,
+            "verification": decision.as_dict(),
+            "policy": {
+                "require_verified": policy.require_verified,
+                "max_age_seconds": policy.max_age_seconds,
+                "min_confidence": policy.min_confidence,
+            },
+            "fact": None
+            if fact is None
+            else {
+                "value": fact.value,
+                "source": fact.source,
+                "session_id": fact.session_id,
+                "confidence": fact.confidence,
+                "created_at_unix": fact.created_at_unix,
+                "verified_at_unix": fact.verified_at_unix,
+            },
+        }
 
     def recall_diagnostics(self, segment_id: str) -> dict[str, Any]:
         started = time.perf_counter()
